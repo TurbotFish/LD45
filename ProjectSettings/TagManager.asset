@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Fog
+    uniqueID: 57890849
+    locked: 0
+  - name: AboveFog
+    uniqueID: 929017559
+    locked: 0
+  - name: Draw
+    uniqueID: 2562586063
+    locked: 0
+  - name: Hand
+    uniqueID: 1606947709
+    locked: 0
