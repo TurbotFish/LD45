@@ -44,6 +44,8 @@ public class BoardManager : MonoBehaviour
     public List<Item> connectedItems = new List<Item>();
     List<Item> boltChainItems = new List<Item>();
 
+    public float arrowSpeed;
+
     public List<BoardConfig> configs = new List<BoardConfig>();
 
     public void Update()
@@ -150,6 +152,10 @@ public class BoardManager : MonoBehaviour
         lockZones[currentZone].gameObject.SetActive(true);
         lockZones[currentZone].sortingLayerName = "AboveFog";
 
+        if (i<4)
+        {
+            StartCoroutine(CardManager.Instance.PickCard(0, 2));
+        }
     }
 
 
@@ -235,6 +241,7 @@ public class BoardManager : MonoBehaviour
         foreach(GameObject go in cells)
         {
             go.SetActive(false);
+            go.GetComponent<Cell>().spriteRenderer.color = cellDefaultColor;
         }
     }
 
@@ -271,6 +278,8 @@ public class BoardManager : MonoBehaviour
             if (items[x + 1,y]!=null)
             {
                 items[x + 1, y].HitItem();
+                InstantiateFX(x + 1, y, CardManager.Instance.swordFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         if (x - 1 >= start)
@@ -278,6 +287,8 @@ public class BoardManager : MonoBehaviour
             if (items[x - 1, y] != null)
             {
                 items[x - 1, y].HitItem();
+                InstantiateFX(x - 1, y, CardManager.Instance.swordFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         if (y + 1 < max)
@@ -285,6 +296,8 @@ public class BoardManager : MonoBehaviour
             if (items[x, y+1] != null)
             {
                 items[x, y+1].HitItem();
+                InstantiateFX(x, y+1, CardManager.Instance.swordFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         if (y - 1 >= start)
@@ -292,10 +305,11 @@ public class BoardManager : MonoBehaviour
             if (items[x, y-1] != null)
             {
                 items[x, y-1].HitItem();
+                InstantiateFX(x, y - 1, CardManager.Instance.swordFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         yield return new WaitForEndOfFrame();
-        DOTween.Restart("camera_shake_1");
     }
 
     public IEnumerator BombAttack(int x, int y)
@@ -308,6 +322,8 @@ public class BoardManager : MonoBehaviour
             if (items[x + 1, y] != null)
             {
                 items[x + 1, y].HitItem();
+                InstantiateFX(x + 1, y, CardManager.Instance.bombFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         if (x - 1 >= start)
@@ -315,6 +331,8 @@ public class BoardManager : MonoBehaviour
             if (items[x - 1, y] != null)
             {
                 items[x - 1, y].HitItem();
+                InstantiateFX(x-1, y, CardManager.Instance.bombFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         if (y + 1 < max)
@@ -322,6 +340,8 @@ public class BoardManager : MonoBehaviour
             if (items[x, y + 1] != null)
             {
                 items[x, y + 1].HitItem();
+                InstantiateFX(x, y + 1, CardManager.Instance.bombFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         if (y - 1 >= start)
@@ -329,10 +349,11 @@ public class BoardManager : MonoBehaviour
             if (items[x, y - 1] != null)
             {
                 items[x, y - 1].HitItem();
+                InstantiateFX(x, y - 1, CardManager.Instance.bombFX, 1.5f);
+                DOTween.Restart("camera_shake_1");
             }
         }
         yield return new WaitForEndOfFrame();
-        DOTween.Restart("camera_shake_1");
 
     }
 
@@ -471,6 +492,131 @@ public class BoardManager : MonoBehaviour
         }
 
         yield return new WaitForEndOfFrame();
+
+        boltChainItems[0].DestroyItem();
+    }
+
+    public IEnumerator ArrowAttack (int x, int y)
+    {
+        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int max = start + (currentZone + 1) * 2;
+
+        Vector3 arrowSpawn = cells[x,y].transform.position;
+        List<Vector3> arrowGoals = new List<Vector3>();
+        List<GameObject> arrows = new List<GameObject>();
+        List<Item> contactItems = new List<Item>();
+
+        GameObject go1 = Instantiate(CardManager.Instance.arrowPrefab, arrowSpawn, Quaternion.identity) as GameObject;
+        go1.transform.eulerAngles = new Vector3(0, 0, -90f);
+        arrows.Add(go1);
+        for (int up = y; up < max;up++)
+        {
+            if (items[x,up] != null)
+            {
+                Item item = items[x, up];
+                arrowGoals.Add(new Vector3(item.transform.position.x, item.transform.position.y - (step * 0.01f)));
+                contactItems.Add(item);
+                break;
+            }
+            else if (up == max-1)
+            {
+                arrowGoals.Add(new Vector3(cells[x, max].transform.position.x - (step * 0.01f), cells[x, max].transform.position.y));
+                contactItems.Add(null);
+            }
+        }
+
+        GameObject go2 = Instantiate(CardManager.Instance.arrowPrefab, arrowSpawn, Quaternion.identity) as GameObject;
+        go2.transform.eulerAngles = new Vector3(0, 0, 90f);
+        arrows.Add(go2);
+        for (int down = y; down >= start; down--)
+        {
+            if (items[x, down] != null)
+            {
+                Item item = items[x, down];
+                arrowGoals.Add(new Vector3(item.transform.position.x, item.transform.position.y + (step * 0.01f)));
+                contactItems.Add(item);
+                break;
+            }
+            else if (down == start)
+            {
+                arrowGoals.Add(new Vector3(cells[x, start].transform.position.x - (step * 0.01f), cells[x, start].transform.position.y));
+                contactItems.Add(null);
+            }
+        }
+
+        GameObject go3 = Instantiate(CardManager.Instance.arrowPrefab, arrowSpawn, Quaternion.identity) as GameObject;
+        go3.transform.eulerAngles = new Vector3(0, 0, 0);
+        arrows.Add(go3);
+        for (int left = x; left >= start; left--)
+        {
+            if (items[left, y] != null)
+            {
+                Item item = items[left, y];
+                arrowGoals.Add(new Vector3(item.transform.position.x + (step * 0.01f), item.transform.position.y));
+                contactItems.Add(item);
+                break;
+            }
+            else if (left == start)
+            {
+                arrowGoals.Add(new Vector3(cells[start, y].transform.position.x - (step * 0.01f), cells[start, y].transform.position.y));
+                contactItems.Add(null);
+            }
+        }
+
+        GameObject go4 = Instantiate(CardManager.Instance.arrowPrefab, arrowSpawn, Quaternion.identity) as GameObject;
+        go4.transform.eulerAngles = new Vector3(0, 0, 180f);
+        arrows.Add(go4);
+        for (int right = x; right < max; right++)
+        {
+            if (items[right, y] != null)
+            {
+                Item item = items[right, y];
+                arrowGoals.Add(new Vector3(item.transform.position.x - (step * 0.01f), item.transform.position.y));
+                contactItems.Add(item);
+                break;
+            }
+            else if (right == max - 1)
+            {
+                arrowGoals.Add(new Vector3(cells[max,y].transform.position.x - (step * 0.01f), cells[max, y].transform.position.y));
+                contactItems.Add(null);
+            }
+        }
+
+        float counter = 0;
+
+        while (counter <1)
+        {
+            counter += Time.deltaTime * arrowSpeed;
+            for (int i = 0; i < arrows.Count; i++)
+            {
+                if (arrows[i] != null)
+                {
+                    arrows[i].transform.position = Vector3.Lerp(arrowSpawn, arrowGoals[i], counter * maxWidth/(Vector3.Distance(arrowSpawn, arrowGoals[i])));
+                }
+                if (counter * maxWidth / (Vector3.Distance(arrowSpawn, arrowGoals[i])) >= 1)
+                {              
+                    Destroy(arrows[i]);                    
+                    if (contactItems[i] != null)
+                    {
+                        contactItems[i].HitItem();
+                    }
+                }
+            }
+            yield return new WaitForEndOfFrame();
+
+        }
+
+
+
+
+
+    }
+
+    public IEnumerator InstantiateFX(int x, int y, GameObject goFX, float duration)
+    {
+        GameObject go = Instantiate(goFX, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
+        yield return new WaitForSeconds(duration);
+        Destroy(go);
     }
 
     public void ComputeConnections()

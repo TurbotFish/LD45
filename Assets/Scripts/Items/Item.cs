@@ -48,6 +48,8 @@ public class Item : MonoBehaviour
             GetComponent<Orb>().DestroyOrb();
         }
 
+        BoardManager.Instance.ComputeConnections();
+
     }
 
     public void DestroyItem()
@@ -67,6 +69,20 @@ public class Item : MonoBehaviour
     {
         connected = true;
         sprite.color = connectedColor;
+    }
+
+    public void Consume()
+    {
+        if (type == CardManager.CardType.Heart ||
+            type == CardManager.CardType.TinyHeart ||
+            type == CardManager.CardType.CorruptedHeart)
+        {
+            HitItem();
+        }
+        else
+        {
+            DestroyItem();
+        }
     }
 
 }

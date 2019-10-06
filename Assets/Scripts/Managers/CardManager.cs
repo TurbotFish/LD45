@@ -22,6 +22,7 @@ public class CardManager : MonoBehaviour
 
     public enum CardType { Heart, CorruptedHeart, TinyHeart, Sword, Heal, Shield, Arrow, Consume, Orb, Bomb, Bolt, Rock, PlusCard, Lock, Bubble}
 
+    public CardDatabase cardDB;
     public Card selectedCard;
     public bool canSelectCard;
 
@@ -57,6 +58,22 @@ public class CardManager : MonoBehaviour
 
     public int orbCount;
     public int maxOrbs = 2;
+
+    public int corruptedHeartCount;
+    public int maxCorruptedHearts = 2;
+
+    public Transform cardPickSpawn;
+    public float pickYpos, pickYhide, handYhidePos;
+    public float cardPickSpace;
+    List<GameObject> cardPickGOs = new List<GameObject>();
+    public float cardPickAnimSpeed;
+    public Animator lockPickAnim;
+
+    public GameObject consumeFX;
+    public GameObject swordFX;
+    public GameObject bombFX;
+    public GameObject healFX;
+    public GameObject arrowPrefab;
 
     public IEnumerator DrawCard()
     {
@@ -245,6 +262,90 @@ public class CardManager : MonoBehaviour
 
     }
 
+    public IEnumerator PickCard(int tier, int picks)
+    {
+
+        StartCoroutine(HideHand());
+        StartCoroutine(FlowManager.Instance.OverlayIn());
+        lockPickAnim.SetTrigger("unlock");
+
+        List<GameObject> cardPicks = new List<GameObject>();
+        
+        float s = 0;
+        foreach (CardElement c in cardDB.cardTiers[tier].cards)
+        {
+            s += c.weight;
+        }
+
+        for (int n = 0; n < picks;n++)
+        {
+
+            float p = Random.Range(0, s);
+            float w = 0;
+            for (int i = 0; i < cardDB.cardTiers[tier].cards.Count; i++)
+            {
+                w += cardDB.cardTiers[tier].cards[i].weight;
+                if (p <= w)
+                {
+                    cardPicks.Add(cardDB.cardTiers[tier].cards[i].cardGO);
+                    break;
+                }
+            }
+        }
+
+        for (int j = 0; j< cardPicks.Count;j++)
+        {
+            GameObject cardGO = Instantiate(cardPicks[j], cardPickSpawn.position, Quaternion.identity) as GameObject;
+            cardGO.transform.position += (cardPickSpawn.right * -1) * (cardPicks.Count * cardPickSpace * 0.5f) + (cardPickSpawn.right * (j + 0.5f) * cardPickSpace);
+            cardGO.GetComponent<Card>().SetCardSpritesOnLayer(999, 0);
+            cardPickGOs.Add(cardGO);
+        }
+
+        List<Vector3> pickOldPos = new List<Vector3>();
+        for(int k = 0; k<cardPickGOs.Count;k++)
+        {
+            pickOldPos.Add(cardPickGOs[k].transform.position);
+        }
+
+        float counter = 0;
+        while (counter < 1)
+        {
+            counter += Time.deltaTime * cardPickAnimSpeed;
+            float t = Mathf.Sin(counter * Mathf.PI * 0.5f);
+            for(int l = 0; l<cardPickGOs.Count;l++)
+            {
+                cardPickGOs[l].transform.position = Vector3.Lerp(pickOldPos[l], pickOldPos[l] + new Vector3(-pickYpos, 0, 0), t);
+            }
+            yield return new WaitForEndOfFrame();
+
+        }
+    }
+
+    public IEnumerator HideHand()
+    {
+        Vector3 handOldPos = handParent.position;
+        float counter = 0;
+        while (counter < 1)
+        {
+            counter += Time.deltaTime * FlowManager.Instance.overlaySpeed;
+            float t = Mathf.Sin(counter * Mathf.PI * 0.5f);
+            handParent.position = Vector3.Lerp(handOldPos, handOldPos + new Vector3(0, -handYhidePos, 0), t);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public IEnumerator ShowHand()
+    {
+        Vector3 handOldPos = handParent.position;
+        float counter = 0;
+        while (counter < 1)
+        {
+            counter += Time.deltaTime * FlowManager.Instance.overlaySpeed;
+            float t = Mathf.Sin(counter * Mathf.PI * 0.5f);
+            handParent.position = Vector3.Lerp(handOldPos, handOldPos + new Vector3(0, handYhidePos, 0), t);
+            yield return new WaitForEndOfFrame();
+        }
+    }
 }
 
 

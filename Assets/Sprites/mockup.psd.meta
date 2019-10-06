@@ -89,6 +89,105 @@ TextureImporter:
   - first:
       213: 1345306425142338037
     second: UI_arrow
+  - first:
+      213: -7279342382330920853
+    second: shard_01
+  - first:
+      213: 1579401214449185780
+    second: shard_02
+  - first:
+      213: -4789255590101056578
+    second: shard_03
+  - first:
+      213: -966791751409869238
+    second: shard_04
+  - first:
+      213: 5087398864221649619
+    second: shard_05
+  - first:
+      213: 4709204078235542355
+    second: shard_06
+  - first:
+      213: -8833096757679854485
+    second: shard_07
+  - first:
+      213: 7784273010097576810
+    second: biglock_01
+  - first:
+      213: 5751203981877120428
+    second: biglock_02
+  - first:
+      213: -4380020532099468275
+    second: FX_slash_01
+  - first:
+      213: 6355894644309169142
+    second: FX_slash_02
+  - first:
+      213: 4549384541404785251
+    second: FX_slash_03
+  - first:
+      213: -7889724470018791919
+    second: FX_slash_04
+  - first:
+      213: -6446301554645257462
+    second: FX_slash_05
+  - first:
+      213: 6736547035516805460
+    second: FX_slash_06
+  - first:
+      213: 8315359062102959360
+    second: FX_sparkles_01
+  - first:
+      213: 8341541415442884571
+    second: FX_sparkles_02
+  - first:
+      213: -206958084923806201
+    second: FX_sparkles_03
+  - first:
+      213: -6934718742536895788
+    second: FX_sparkles_04
+  - first:
+      213: 637519026487159515
+    second: FX_sparkles_05
+  - first:
+      213: -985681155115479891
+    second: FX_sparkles_06
+  - first:
+      213: -999367187751983204
+    second: FX_boom_01
+  - first:
+      213: -5018468021399794310
+    second: FX_boom_02
+  - first:
+      213: 1077358641702749305
+    second: FX_boom_03
+  - first:
+      213: -2366117730279246229
+    second: FX_boom_04
+  - first:
+      213: -8440200996046032704
+    second: FX_boom_05
+  - first:
+      213: -3002525490074624099
+    second: FX_boom_06
+  - first:
+      213: -3177200855818578922
+    second: FX_fire_01
+  - first:
+      213: -8046220249446911745
+    second: FX_fire_02
+  - first:
+      213: -9192137662195498872
+    second: FX_fire_03
+  - first:
+      213: -3932318635573753573
+    second: FX_fire_04
+  - first:
+      213: -5199037728128288959
+    second: FX_fire_05
+  - first:
+      213: -2194578084798021042
+    second: FX_fire_06
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -801,6 +900,699 @@ TextureImporter:
       bones: []
       spriteID: f15f2e0cde5f9d649812c9d7fb8a8c8a
       internalID: 1345306425142338037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_01
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 234
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8584a9c76c4e5894196a1721fd989816
+      internalID: -7279342382330920853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_02
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 222
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84f67c191de3a484d8ffc36c26513f9b
+      internalID: 1579401214449185780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_03
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 229
+        width: 3
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a08f82cae8411f04f87e90af6293eafc
+      internalID: -4789255590101056578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_04
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 234
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0eb1486b5af51984ca8ae1e22544dbd6
+      internalID: -966791751409869238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_05
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 226
+        width: 5
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b06d326ad6f9a54f90ced8735fc3176
+      internalID: 5087398864221649619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_06
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 217
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2bbc37cfd459be94b9bbb365f8eb4727
+      internalID: 4709204078235542355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: shard_07
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 218
+        width: 5
+        height: 3
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 14d2cb7d2555bd140a587c810c0ab92a
+      internalID: -8833096757679854485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: biglock_01
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 128
+        width: 55
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27487f256a275a1499686b1b4514d89a
+      internalID: 7784273010097576810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: biglock_02
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 128
+        width: 55
+        height: 82
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1409f91296b334544920ecabf4938c37
+      internalID: 5751203981877120428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_slash_01
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 125
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ecd6c5994ebced4cbfcf72ae2a4e2e8
+      internalID: -4380020532099468275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_slash_02
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 125
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be4da97a0871ffd45abd424d10c217b6
+      internalID: 6355894644309169142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_slash_03
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 125
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6f50c27b09bcd848a3999e66fa99cd8
+      internalID: 4549384541404785251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_slash_04
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 125
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2dd8f3742256e044384ad356eed70431
+      internalID: -7889724470018791919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_slash_05
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 125
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c027f0c517892de419af60859dbc1fec
+      internalID: -6446301554645257462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_slash_06
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 125
+        width: 30
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49b01dc1bae715543a09b1307ae50d71
+      internalID: 6736547035516805460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_sparkles_01
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 156
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 817f214c9f3759f42ae27757b876ab4e
+      internalID: 8315359062102959360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_sparkles_02
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 156
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e0c761432a7b574b83de986c87512d9
+      internalID: 8341541415442884571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_sparkles_03
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 156
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2784e6a318db9e74fb6d4efa01d4f643
+      internalID: -206958084923806201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_sparkles_04
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 156
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08006ee65ba6d3e47adb5b4a99235f5f
+      internalID: -6934718742536895788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_sparkles_05
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 156
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bc08d76813e6516439acb5ab5a1a012b
+      internalID: 637519026487159515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_sparkles_06
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 156
+        width: 30
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1eb84f81f82c4f247929335a406bc50c
+      internalID: -985681155115479891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_boom_01
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 186
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a43c3d03617a3d749a0d93018aa7cda4
+      internalID: -999367187751983204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_boom_02
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 186
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ef2440536ab6dc4188575c6f525fc88
+      internalID: -5018468021399794310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_boom_03
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 186
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4826e54a1a1a88441bcbe73e5d554796
+      internalID: 1077358641702749305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_boom_04
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 186
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd8378b04e3dbbc49beb7d1eea011060
+      internalID: -2366117730279246229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_boom_05
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 186
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86574fb3a2a2f63469f9c8d7e67f926d
+      internalID: -8440200996046032704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_boom_06
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 186
+        width: 30
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58f5a849257e86d43998113a4abba7f5
+      internalID: -3002525490074624099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_fire_01
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 216
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b097f2c0de47aa04883d2333c1c89913
+      internalID: -3177200855818578922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_fire_02
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 216
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ab73f00363cc4d4aa9594d46d6bccf7
+      internalID: -8046220249446911745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_fire_03
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 216
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 086fb3329df221d4a92cc406c40e24d5
+      internalID: -9192137662195498872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_fire_04
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 216
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9fb14dcec07ba884dbd49c189a4cd23e
+      internalID: -3932318635573753573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_fire_05
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 216
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 728fbdd20ff9620438fc32e550c35162
+      internalID: -5199037728128288959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_fire_06
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 216
+        width: 30
+        height: 29
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 722e5e112b9f0494193a834ca671f8de
+      internalID: -2194578084798021042
       vertices: []
       indices: 
       edges: []

@@ -33,6 +33,10 @@ public class Heart : MonoBehaviour
 
     public void DestroyHeart()
     {
-        
+        Item item = GetComponent<Item>();
+        if (item.type == CardManager.CardType.CorruptedHeart)
+        {
+            CardManager.Instance.corruptedHeartCount--;
+        }
     }
 }

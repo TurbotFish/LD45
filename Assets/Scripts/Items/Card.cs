@@ -107,6 +107,7 @@ public class Card : MonoBehaviour
 
     public void ResolveCard(int x, int y)
     {
+        BoardManager.Instance.HideCells();
 
         switch (cardType)
         {
@@ -114,8 +115,10 @@ public class Card : MonoBehaviour
                 StartCoroutine(ResolveHeart(x,y));
                 break;
             case CardManager.CardType.CorruptedHeart:
+                StartCoroutine(ResolveCorruptedHeart(x, y));
                 break;
             case CardManager.CardType.TinyHeart:
+                StartCoroutine(ResolveTinyHeart(x, y));
                 break;
             case CardManager.CardType.Sword:
                 StartCoroutine(ResolveSword(x, y));
@@ -127,8 +130,10 @@ public class Card : MonoBehaviour
                 StartCoroutine(ResolveHeal(x, y));
                 break;
             case CardManager.CardType.Orb:
+                StartCoroutine(ResolveOrb(x, y));
                 break;
             case CardManager.CardType.Arrow:
+                StartCoroutine(ResolveArrows(x,y));
                 break;
 
         }
@@ -176,6 +181,40 @@ public class Card : MonoBehaviour
 
     }
 
+
+    public IEnumerator ResolveTinyHeart(int x, int y)
+    {
+        FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
+        BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.DrawCard());
+
+    }
+
+    public IEnumerator ResolveCorruptedHeart(int x, int y)
+    {
+        FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
+        BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+
+        CardManager.Instance.corruptedHeartCount++;
+        if (CardManager.Instance.handSize < 1)
+        {
+            yield return new WaitForSeconds(0.25f);
+            StartCoroutine(CardManager.Instance.DrawCard());
+        }
+    }
+
+
+
+
     public IEnumerator ResolveHeal(int x, int y)
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
@@ -205,5 +244,31 @@ public class Card : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
             StartCoroutine(CardManager.Instance.DrawCard());
         }
+    }
+
+    public IEnumerator ResolveConsume(int x, int y)
+    {
+        FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
+        BoardManager.Instance.InstantiateFX(x, y, CardManager.Instance.consumeFX, 1);
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        BoardManager.Instance.items[x, y].Consume();
+        yield return new WaitForSeconds(0.5f);
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+        StartCoroutine(CardManager.Instance.DrawCard());
+
+    }
+
+
+    public IEnumerator ResolveArrows(int x, int y)
+    {
+        FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
+        StartCoroutine(BoardManager.Instance.ArrowAttack(x,y));
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        yield return new WaitForSeconds(0.5f);
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+        StartCoroutine(CardManager.Instance.DrawCard());
+
     }
 }

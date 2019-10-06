@@ -21,6 +21,10 @@ public class FlowManager : MonoBehaviour
 
     public GameState state;
 
+    public SpriteRenderer overlay;
+    public Color overlayOn, overlayOff;
+    public float overlaySpeed;
+
     public void SetState(GameState s)
     {
         switch (s)
@@ -43,6 +47,31 @@ public class FlowManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(CardManager.Instance.DrawHeart());
+        overlay.color = overlayOff;
+    }
 
+
+    public IEnumerator OverlayIn()
+    {
+        float counter = 0;
+        while (counter<1)
+        {
+            counter += Time.deltaTime * overlaySpeed;
+            float t = Mathf.Sin(counter * Mathf.PI * 0.5f);
+            overlay.color = Color.Lerp(overlayOff, overlayOn, t);
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public IEnumerator OverlayOut()
+    {
+        float counter = 0;
+        while (counter < 1)
+        {
+            counter += Time.deltaTime * overlaySpeed;
+            float t = Mathf.Sin(counter * Mathf.PI * 0.5f);
+            overlay.color = Color.Lerp(overlayOn, overlayOff, t);
+            yield return new WaitForEndOfFrame();
+        }
     }
 }
