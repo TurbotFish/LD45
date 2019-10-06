@@ -7,8 +7,13 @@ public class MouseManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !FlowManager.Instance.noInput)
         {
+
+            if (FlowManager.Instance.tuto && FlowManager.Instance.tutoStep == 4)
+            {
+                StartCoroutine(FlowManager.Instance.QuitTuto());
+            }
 
             RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
@@ -25,7 +30,10 @@ public class MouseManager : MonoBehaviour
                     {
                         if (CardManager.Instance.selectedCard != null)
                         {
-                            CardManager.Instance.selectedCard.UnselectCard();
+                            if (CardManager.Instance.selectedCard != card)
+                            {
+                                CardManager.Instance.selectedCard.UnselectCard();
+                            }
                         }
                         card.SelectCard();
                     }

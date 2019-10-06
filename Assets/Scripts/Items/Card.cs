@@ -55,7 +55,18 @@ public class Card : MonoBehaviour
         anim.SetBool("selected", true);
         CardManager.Instance.selectedCard = this;
 
-        if (FlowManager.Instance.state == FlowManager.GameState.Idle)
+        if (FlowManager.Instance.tuto)
+        {
+            if (FlowManager.Instance.tutoStep == 1)
+            {
+                StartCoroutine(FlowManager.Instance.TutoStepTwo());
+            }
+            else if (FlowManager.Instance.tutoStep == 3)
+            {
+                StartCoroutine(FlowManager.Instance.TutoStepThreeHalf());
+            }
+        }
+        else if (FlowManager.Instance.state == FlowManager.GameState.Idle)
         {
             FlowManager.Instance.SetState(FlowManager.GameState.Casting);
 
@@ -93,6 +104,17 @@ public class Card : MonoBehaviour
 
     public void UnselectCard()
     {
+        if (FlowManager.Instance.tuto)
+        {
+            if (FlowManager.Instance.tutoStep == 2)
+            {
+                StartCoroutine(FlowManager.Instance.TutoStepOne());
+            }
+            else if (FlowManager.Instance.tutoStep == 3)
+            {
+                StartCoroutine(FlowManager.Instance.TutoStepThree(false));
+            }
+        }
         anim.SetBool("hover", false);
         anim.SetBool("selected", false);
         BoardManager.Instance.HideCells();
@@ -145,6 +167,9 @@ public class Card : MonoBehaviour
             case CardManager.CardType.Arrow:
                 StartCoroutine(ResolveArrows(x,y));
                 break;
+            case CardManager.CardType.Consume:
+                StartCoroutine(ResolveConsume(x, y));
+                break;
 
         }
     }
@@ -152,22 +177,38 @@ public class Card : MonoBehaviour
 
     public IEnumerator ResolveHeart(int x, int y)
     {
+        if (FlowManager.Instance.tuto)
+        {
+            FlowManager.Instance.tutoStep = 3;
+        }
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.DiscardHeart(CardManager.Instance.selectedCard.transform));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
-        yield return new WaitForSeconds(1f);
-        StartCoroutine(CardManager.Instance.DrawCard());
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(CardManager.Instance.DrawCard());
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        if (!FlowManager.Instance.tuto)
+        {
+            yield return new WaitForSeconds(1f);
+            StartCoroutine(CardManager.Instance.DrawCard());
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(CardManager.Instance.DrawCard());
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(CardManager.Instance.DrawCard());
+        }
+        else
+        {
+            StartCoroutine(FlowManager.Instance.TutoStepThree(true));
+        }
+
     }
 
     public IEnumerator ResolveSword(int x, int y)
     {
+        if (FlowManager.Instance.tuto)
+        {
+            FlowManager.Instance.tutoStep = 4;
+        }
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         yield return new WaitForSeconds(0.25f);
@@ -175,7 +216,15 @@ public class Card : MonoBehaviour
         StartCoroutine(BoardManager.Instance.SwordAttack(x,y));
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
-        StartCoroutine(CardManager.Instance.DrawCard());
+
+        if(FlowManager.Instance.tuto)
+        {
+            StartCoroutine(FlowManager.Instance.TutoStepFour());
+        }
+        else
+        {
+            StartCoroutine(CardManager.Instance.DrawCard());
+        }
 
     }
 

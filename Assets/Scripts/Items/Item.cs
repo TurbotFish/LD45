@@ -30,6 +30,7 @@ public class Item : MonoBehaviour
         if (type == CardManager.CardType.Bomb)
         {
             StartCoroutine(BoardManager.Instance.BombAttack(x, y));
+            DestroyItem();
         }
 
         if (type == CardManager.CardType.Bolt)

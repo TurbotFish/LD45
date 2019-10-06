@@ -62,3 +62,6 @@ TagManager:
   - name: OverlayCard
     uniqueID: 999
     locked: 1
+  - name: Menu
+    uniqueID: 2092834669
+    locked: 0

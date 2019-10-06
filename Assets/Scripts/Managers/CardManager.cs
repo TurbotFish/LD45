@@ -23,6 +23,7 @@ public class CardManager : MonoBehaviour
     public enum CardType { Heart, CorruptedHeart, TinyHeart, Sword, Heal, Shield, Arrow, Consume, Orb, Bomb, Bolt, Rock, PlusCard, Lock, Bubble}
 
     public CardDatabase cardDB;
+    public List<GameObject> baseDeck = new List<GameObject>();
     public Card selectedCard;
     public bool canSelectCard;
 
@@ -68,12 +69,45 @@ public class CardManager : MonoBehaviour
     List<GameObject> cardPickGOs = new List<GameObject>();
     public float cardPickAnimSpeed;
     public Animator lockPickAnim;
+    public Transform pickCardText;
 
     public GameObject consumeFX;
     public GameObject swordFX;
     public GameObject bombFX;
     public GameObject healFX;
     public GameObject arrowPrefab;
+
+    public void ResetDeck()
+    {
+        foreach(GameObject g in cardsInDeck)
+        {
+            Destroy(g);
+        }
+        foreach (GameObject g in cardsInDiscard)
+        {
+            Destroy(g);
+        }
+        foreach (GameObject g in cardsInHand)
+        {
+            Destroy(g);
+        }
+        totalCards = 0;
+        
+        for (int i = 0; i <baseDeck.Count;i++)
+        {
+            GameObject go = Instantiate(baseDeck[i], cardHandSpawn.position, Quaternion.identity, deckParent) as GameObject;
+            cardsInDeck.Add(go);
+            totalCards++;
+        }
+
+        UpdateCardNumber();
+    }
+
+    public void UpdateCardNumber()
+    {
+        cardNumber.text = cardsInDeck.Count.ToString() + " / " + totalCards.ToString();
+
+    }
 
     public IEnumerator DrawCard()
     {
@@ -115,6 +149,8 @@ public class CardManager : MonoBehaviour
         {
             StartCoroutine(ShuffleDeck());
         }
+
+        UpdateCardNumber();
     }
 
     public IEnumerator DrawHeart()
@@ -152,7 +188,7 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator ShuffleDeck()
     {
-        yield return new WaitForSeconds(0.25f);
+        //yield return new WaitForSeconds(0.25f);
         for(int i = 0; i<cardsInDiscard.Count;i++)
         {
             cardsInDiscard[i].GetComponent<Card>().SetCardSpritesOnLayer(25625860, 10 * i);
@@ -170,6 +206,7 @@ public class CardManager : MonoBehaviour
             for (int l = 0; l < cardsInDiscard.Count;l++)
             {
                 cardsInDeck.Add(cardsInDiscard[l]);
+                cardsInDeck[l].GetComponent<Card>().discarded = false;
             }
 
             List<Vector3> cardOldPositions = new List<Vector3>();
@@ -178,18 +215,18 @@ public class CardManager : MonoBehaviour
                 cardOldPositions.Add(cardsInDiscard[m].transform.position);
             }
             counter3 = 0;
-            while (counter3 < cardsInDiscard.Count* shuffleSpace)
+            while (counter3 < 1)
             {
                 counter3 += Time.deltaTime * shuffleSpeed*cardsInDiscard.Count;
                 for (int n = 0; n < cardsInDiscard.Count; n++)
                 {
-                    cardsInDiscard[n].transform.position = Vector3.Lerp(cardOldPositions[n], discardHiddenPos.position, Mathf.Clamp(counter3-n*shuffleSpace,0,cardsInDiscard.Count* shuffleSpace));
+                    cardsInDiscard[n].transform.position = Vector3.Lerp(cardOldPositions[n], discardHiddenPos.position, counter3);
                 }
                 yield return new WaitForEndOfFrame();
             }
 
             cardsInDiscard.Clear();
-
+            UpdateCardNumber();
         }
     }
 
@@ -198,9 +235,12 @@ public class CardManager : MonoBehaviour
         handSize--;
 
         discardedCard.parent = discardParent;
-        CardManager.Instance.selectedCard.SetCardSpritesOnLayer(888, 10+cardsInDiscard.Count*10);
-        CardManager.Instance.selectedCard.UnselectCard();
-        CardManager.Instance.selectedCard = null;
+        if (selectedCard != null)
+        {
+            selectedCard.SetCardSpritesOnLayer(888, 10 + cardsInDiscard.Count * 10);
+            selectedCard.UnselectCard();
+            selectedCard = null;
+        }
         cardsInDiscard.Add(discardedCard.gameObject);
         cardsInHand.Remove(discardedCard.gameObject);
         discardedCard.GetComponent<Card>().discarded = true;
@@ -266,7 +306,8 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator PickCard(int tier, int picks)
     {
-        
+        pickCardText.position = cardPickSpawn.position;
+
         FlowManager.Instance.SetState(FlowManager.GameState.ChoosingCard);
         StartCoroutine(HideHand());
         StartCoroutine(FlowManager.Instance.OverlayIn());
@@ -316,6 +357,7 @@ public class CardManager : MonoBehaviour
             pickOldPos.Add(cardPickGOs[k].transform.position);
         }
 
+        Vector3 pickCardTextOldPos = pickCardText.position;
         float counter = 0;
         while (counter < 1)
         {
@@ -325,6 +367,11 @@ public class CardManager : MonoBehaviour
             {
                 cardPickGOs[l].transform.position = Vector3.Lerp(pickOldPos[l], pickOldPos[l] + new Vector3(0, -pickYpos, 0), t);
             }
+
+
+            pickCardText.position = Vector3.Lerp(pickCardTextOldPos, pickCardTextOldPos + new Vector3(0, -pickYpos, 0), t);
+
+
             yield return new WaitForEndOfFrame();
 
         }
@@ -332,6 +379,7 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator ChooseCard(GameObject go)
     {
+
         int i = cardPickGOs.IndexOf(go.gameObject);
 
         List<Vector3> pickOldPos = new List<Vector3>();
@@ -340,6 +388,7 @@ public class CardManager : MonoBehaviour
             pickOldPos.Add(cardPickGOs[k].transform.position);
         }
 
+        Vector3 pickCardTextOldPos = pickCardText.position;
         float counter = 0;
         while (counter < 1)
         {
@@ -351,6 +400,10 @@ public class CardManager : MonoBehaviour
                     cardPickGOs[l].transform.position = Vector3.Lerp(pickOldPos[l], pickOldPos[l] + new Vector3(0, -pickYhide, 0), counter);
                 }
             }
+
+            pickCardText.position = Vector3.Lerp(pickCardTextOldPos, pickCardTextOldPos + new Vector3(0, -pickYhide, 0), counter);
+
+
             yield return new WaitForEndOfFrame();
         }
 
@@ -371,6 +424,17 @@ public class CardManager : MonoBehaviour
         StartCoroutine(ShowHand());
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
 
+        if(FlowManager.Instance.tutoStep == 5)
+        {
+            FlowManager.Instance.tutoStep = -1;
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(DrawCard());
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(DrawCard());
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(DrawCard());
+        }
+
         for (int j = 0; j < cardPickGOs.Count; j++)
         {
             if (j != i)
@@ -387,7 +451,9 @@ public class CardManager : MonoBehaviour
         cardsInDeck.Add(card);
         card.transform.position = cardHandSpawn.position;
         totalCards++;
-        deckAnim.SetTrigger("Add");
+        //deckAnim.SetTrigger("Add");
+        UpdateCardNumber();
+
     }
 
     public IEnumerator HideHand()

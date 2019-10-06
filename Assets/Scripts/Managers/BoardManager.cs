@@ -40,6 +40,7 @@ public class BoardManager : MonoBehaviour
     GameObject[,] cells = new GameObject[10, 10];
     public Color cellHoverColor, cellDefaultColor;
     public Item[,] items = new Item[10, 10];
+    List<GameObject> storeItems = new List<GameObject>();
     public List<Heart> hearts = new List<Heart>();
 
     public List<Item> connectedItems = new List<Item>();
@@ -49,30 +50,29 @@ public class BoardManager : MonoBehaviour
 
     public List<BoardConfig> configs = new List<BoardConfig>();
 
-    public void Update()
-    {
 
-    }
 
-    public void Start()
+    public void ResetBoard(int configID)
     {
-        InitializeFog();
+        InitializeItems(configID);
+        InitializeFog(false);
         InitializeZones();
-        StartCoroutine(OpenZone(currentZone,0));
-        InitializeCells();
-        InitializeItems(0);
-
     }
 
-    public void InitializeFog()
+
+    public void InitializeFog(bool instantiate)
     {
         for (int x = 0; x < maxWidth;x++)
         {
             for (int y = 0; y < maxWidth; y++)
             {
-                Vector3 fogPos = fogParent.position + new Vector3(x*step, y*step, 0);
-                GameObject fog = Instantiate(p_fog, fogPos, Quaternion.identity, fogParent) as GameObject;
-                fogs[x, y] = fog.GetComponent<SpriteRenderer>();
+                if (instantiate)
+                {
+                    Vector3 fogPos = fogParent.position + new Vector3(x * step, y * step, 0);
+                    GameObject fog = Instantiate(p_fog, fogPos, Quaternion.identity, fogParent) as GameObject;
+                    fogs[x, y] = fog.GetComponent<SpriteRenderer>();
+                }
+                SetFogOpacityAt(x, y, 1);
             }
         }
     }
@@ -94,8 +94,13 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+
     public void InitializeItems(int configID)
     {
+        foreach(GameObject g in storeItems)
+        {
+            Destroy(g);
+        }
         for (int i = 0; i < configs[configID].spawnItems.Count;i++)
         {
             InstantiateItem(Mathf.RoundToInt(configs[configID].spawnItems[i].pos.x), Mathf.RoundToInt(configs[configID].spawnItems[i].pos.y), configs[configID].spawnItems[i].item);
@@ -121,8 +126,9 @@ public class BoardManager : MonoBehaviour
         }
         if (open)
         {
-            lockZoneAnims[currentZone].SetTrigger("death");
+            lockZoneAnims[currentZone].SetBool("dead", true);
             currentZone++;
+            //lockZoneAnims[currentZone].SetTrigger("revive");
 
             StartCoroutine(OpenZone(currentZone, 1));
         }
@@ -130,39 +136,60 @@ public class BoardManager : MonoBehaviour
     
     public void InitializeZones()
     {
+        currentZone = 0;
         foreach(Animator a in lockZoneAnims)
         {
-            //sp.gameObject.SetActive(false);
-            a.SetTrigger("death");
+            a.SetBool("dead", true);
         }
-
-        //lockZones[currentZone].gameObject.SetActive(true);
-        lockZoneAnims[currentZone].SetTrigger("revive");
+        lockZones[currentZone].sortingLayerName = "Default";
+        lockZoneAnims[currentZone].SetBool("dead", false); ;
 
     }
 
     public IEnumerator OpenZone(int i, float time)
     {
-        lockZoneAnims[currentZone].SetTrigger("revive");
-        lockZones[currentZone].sortingLayerName = "AboveFog";
-
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
-        int max = start + (currentZone + 1) * 2;
-
-        for (int x = start;x<max;x++)
+        if (i > 4)
         {
-            for (int y = start; y < max; y++)
+            StartCoroutine(FlowManager.Instance.Win());
+        }
+        else
+        {
+            lockZoneAnims[currentZone].SetBool("dead", false); ;
+            lockZones[currentZone].sortingLayerName = "AboveFog";
+
+            int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+            int max = start + (currentZone + 1) * 2;
+
+            for (int x = start; x < max; x++)
             {
-                SetFogOpacityAt(x, y, 0);
+                for (int y = start; y < max; y++)
+                {
+                    SetFogOpacityAt(x, y, 0);
+                }
+            }
+
+            for (int j = start - 1; j < max + 1; j++)
+            {
+                SetFogOpacityAt(start - 1, j, 0.8f);
+                SetFogOpacityAt(max, j, 0.8f);
+                SetFogOpacityAt(j, start - 1, 0.8f);
+                SetFogOpacityAt(j, max, 0.8f);
+            }
+            lockZoneAnims[currentZone].SetBool("dead", false); ;
+
+            yield return new WaitForSeconds(time);
+
+            if (i <= 4 && i != 0 && !FlowManager.Instance.tuto)
+            {
+                StartCoroutine(CardManager.Instance.PickCard(0, 2));
+            }
+            else if (i>4)
+            {
+                StartCoroutine(FlowManager.Instance.Win());
+
             }
         }
-
-        yield return new WaitForSeconds(time);
-
-        if (i<4 && i!= 0)
-        {
-            StartCoroutine(CardManager.Instance.PickCard(0, 2));
-        }
+        
     }
 
 
@@ -243,6 +270,11 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public void HighlightSpecificCell(int x, int y)
+    {
+        cells[x, y].SetActive(true);
+    }
+
     public void HideCells()
     {
         foreach(GameObject go in cells)
@@ -257,6 +289,7 @@ public class BoardManager : MonoBehaviour
     public void InstantiateItem(int x, int y, GameObject goRef)
     {
         GameObject go = Instantiate(goRef, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
+        storeItems.Add(go);
         Item item = go.GetComponent<Item>();
         item.x = x;
         item.y = y;
@@ -317,6 +350,7 @@ public class BoardManager : MonoBehaviour
             }
         }
         yield return new WaitForEndOfFrame();
+        ComputeConnections();
     }
 
     public IEnumerator BombAttack(int x, int y)
@@ -606,12 +640,13 @@ public class BoardManager : MonoBehaviour
                 }
                 if (counter * maxWidth / (Vector3.Distance(arrowSpawn, arrowGoals[i])) >= 1)
                 {              
-                    Destroy(arrows[i]);                    
-                    if (contactItems[i] != null)
+                    if (contactItems[i] != null && arrows[i] !=null)
                     {
                         contactItems[i].HitItem();
                         InstantiateFX(contactItems[i].x, contactItems[i].y, CardManager.Instance.bombFX, 1.5f);
                     }
+                    Destroy(arrows[i]);
+
                 }
             }
             yield return new WaitForEndOfFrame();

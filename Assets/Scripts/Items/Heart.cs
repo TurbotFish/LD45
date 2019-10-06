@@ -38,5 +38,13 @@ public class Heart : MonoBehaviour
         {
             CardManager.Instance.corruptedHeartCount--;
         }
+
+        BoardManager.Instance.hearts.Remove(this);
+        if (BoardManager.Instance.hearts.Count==0)
+        {
+
+            StartCoroutine(FlowManager.Instance.GameOver());
+        }
+        item.DestroyItem();
     }
 }
