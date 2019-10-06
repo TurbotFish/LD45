@@ -27,6 +27,7 @@ public class FlowManager : MonoBehaviour
 
     public void SetState(GameState s)
     {
+        state = s;
         switch (s)
         {
             case GameState.Idle:
@@ -48,6 +49,7 @@ public class FlowManager : MonoBehaviour
     {
         StartCoroutine(CardManager.Instance.DrawHeart());
         overlay.color = overlayOff;
+        SetState(GameState.Idle);
     }
 
 

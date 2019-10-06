@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviour
     public int currentZone;
     public GameObject lockPrefab;
     public List<SpriteRenderer> lockZones = new List<SpriteRenderer>();
+    public List<Animator> lockZoneAnims = new List<Animator>();
     public List<LockList> lockLists = new List<LockList>();
 
     public GameObject p_fog;
@@ -57,7 +58,7 @@ public class BoardManager : MonoBehaviour
     {
         InitializeFog();
         InitializeZones();
-        OpenZone(currentZone);
+        StartCoroutine(OpenZone(currentZone,0));
         InitializeCells();
         InitializeItems(0);
 
@@ -120,24 +121,31 @@ public class BoardManager : MonoBehaviour
         }
         if (open)
         {
-            lockZones[currentZone].gameObject.SetActive(false);
+            lockZoneAnims[currentZone].SetTrigger("death");
             currentZone++;
-            OpenZone(currentZone);
+
+            StartCoroutine(OpenZone(currentZone, 1));
         }
     }
     
     public void InitializeZones()
     {
-        foreach(SpriteRenderer sp in lockZones)
+        foreach(Animator a in lockZoneAnims)
         {
-            sp.gameObject.SetActive(false);
+            //sp.gameObject.SetActive(false);
+            a.SetTrigger("death");
         }
 
-        lockZones[currentZone].gameObject.SetActive(true);
+        //lockZones[currentZone].gameObject.SetActive(true);
+        lockZoneAnims[currentZone].SetTrigger("revive");
+
     }
 
-    public void OpenZone(int i)
+    public IEnumerator OpenZone(int i, float time)
     {
+        lockZoneAnims[currentZone].SetTrigger("revive");
+        lockZones[currentZone].sortingLayerName = "AboveFog";
+
         int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
         int max = start + (currentZone + 1) * 2;
 
@@ -149,10 +157,9 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        lockZones[currentZone].gameObject.SetActive(true);
-        lockZones[currentZone].sortingLayerName = "AboveFog";
+        yield return new WaitForSeconds(time);
 
-        if (i<4)
+        if (i<4 && i!= 0)
         {
             StartCoroutine(CardManager.Instance.PickCard(0, 2));
         }
@@ -365,6 +372,7 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x + 1, y].GetComponent<Heart>() != null)
                 {
+                    InstantiateFX(x+1, y, CardManager.Instance.healFX, 1.5f);
                     items[x + 1, y].GetComponent<Heart>().Heal();
                 }
             }
@@ -375,6 +383,7 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x - 1, y].GetComponent<Heart>() != null)
                 {
+                    InstantiateFX(x - 1, y, CardManager.Instance.healFX, 1.5f);
                     items[x - 1, y].GetComponent<Heart>().Heal();
                 }
             }
@@ -385,6 +394,7 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x, y + 1].GetComponent<Heart>() != null)
                 {
+                    InstantiateFX(x, y + 1, CardManager.Instance.healFX, 1.5f);
                     items[x, y + 1].GetComponent<Heart>().Heal();
                 }
             }
@@ -395,6 +405,7 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x, y - 1].GetComponent<Heart>() != null)
                 {
+                    InstantiateFX(x, y - 1, CardManager.Instance.healFX, 1.5f);
                     items[x, y - 1].GetComponent<Heart>().Heal();
                 }
             }
@@ -599,6 +610,7 @@ public class BoardManager : MonoBehaviour
                     if (contactItems[i] != null)
                     {
                         contactItems[i].HitItem();
+                        InstantiateFX(contactItems[i].x, contactItems[i].y, CardManager.Instance.bombFX, 1.5f);
                     }
                 }
             }
@@ -612,11 +624,10 @@ public class BoardManager : MonoBehaviour
 
     }
 
-    public IEnumerator InstantiateFX(int x, int y, GameObject goFX, float duration)
+    public void InstantiateFX(int x, int y, GameObject goFX, float duration)
     {
         GameObject go = Instantiate(goFX, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
-        yield return new WaitForSeconds(duration);
-        Destroy(go);
+        Destroy(go,duration);
     }
 
     public void ComputeConnections()

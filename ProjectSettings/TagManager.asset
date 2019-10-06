@@ -54,11 +54,11 @@ TagManager:
     uniqueID: 25625860
     locked: 0
   - name: Discard
-    uniqueID: 2625574307
-    locked: 0
+    uniqueID: 888
+    locked: 1
   - name: Hand
     uniqueID: 1606947709
     locked: 0
   - name: OverlayCard
-    uniqueID: 618660229
-    locked: 0
+    uniqueID: 999
+    locked: 1

@@ -14,9 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardTiers:
   - cards:
-    - cardGO: {fileID: 2515248564735651502, guid: fdc16bc7bfe2a2040ad1521d3466b4be,
+    - cardGO: {fileID: 2515248564735651502, guid: ac4323d545f393e45b7e7efc3b6f2d7e,
         type: 3}
-      weight: 0
+      weight: 1
+    - cardGO: {fileID: 2515248564735651502, guid: a23bd9690dbd2b04b8dfb8ea2b059463,
+        type: 3}
+      weight: 1
+    - cardGO: {fileID: 2515248564735651502, guid: b98c46e4290003f4eb481696a50910ec,
+        type: 3}
+      weight: 1
+    - cardGO: {fileID: 2515248564735651502, guid: 71d48fe5816ef0146a12086416e28608,
+        type: 3}
+      weight: 0.5
+    - cardGO: {fileID: 2515248564735651502, guid: 345ed90e00e76494e8bb9ac628104ff9,
+        type: 3}
+      weight: 0.5
+    - cardGO: {fileID: 7637080932462117188, guid: faf832df63f04d045a99de3573b6afe8,
+        type: 3}
+      weight: 0.2
+    - cardGO: {fileID: 7637080932462117188, guid: 27361d2848575c14ab640a067c033338,
+        type: 3}
+      weight: 0.2
   - cards: []
   - cards: []
   - cards: []

@@ -29,9 +29,9 @@ public class CardManager : MonoBehaviour
     public List<GameObject> cardsInDeck = new List<GameObject>();
     public int totalCards;
     public TextMeshPro cardNumber;
-    public Animator drawCardAnim;
     public float drawSpeed;
     public Transform deckParent;
+    public Animator deckAnim;
 
 
     public List<GameObject> cardsInDiscard = new List<GameObject>();
@@ -81,6 +81,7 @@ public class CardManager : MonoBehaviour
 
         Transform drawnCard = cardsInDeck[0].transform;
         drawnCard.position = cardHandSpawn.position;
+        drawnCard.parent = handParent;
 
         cardsInDeck.RemoveAt(0);
         cardsInHand.Add(drawnCard.gameObject);
@@ -88,14 +89,14 @@ public class CardManager : MonoBehaviour
         List<Vector3> cardOldPositions = new List<Vector3>();
         for (int i = 0; i < handSize; i++)
         {
-            cardOldPositions.Add(cardsInHand[i].transform.position);
+            cardOldPositions.Add(cardsInHand[i].transform.localPosition);
         }
 
 
         cardPositions.Clear();
         for(int i =0;i< handSize; i++)
         {
-            cardPositions.Add(handParent.position + (handParent.right*-1)*(handSize*cardSpace*0.5f)+ (handParent.right * (i+0.5f)*cardSpace) + (handParent.right * -0.073f * (5 - handSize)));
+            cardPositions.Add((handParent.right*-1)*(handSize*cardSpace*0.5f)+ (handParent.right * (i+0.5f)*cardSpace) + (handParent.right * -0.073f * (5 - handSize)));
         }
 
         yield return new WaitForSeconds(0.01f);
@@ -105,7 +106,7 @@ public class CardManager : MonoBehaviour
             counter1 += Time.deltaTime * drawSpeed;
             for(int i = 0;i<handSize;i++)
             {
-                cardsInHand[i].transform.position = Vector3.Lerp(cardOldPositions[i], cardPositions[i], counter1);
+                cardsInHand[i].transform.localPosition = Vector3.Lerp(cardOldPositions[i], cardPositions[i], counter1);
             }
             yield return new WaitForEndOfFrame();
         }
@@ -122,18 +123,19 @@ public class CardManager : MonoBehaviour
 
         Transform drawnCard = heartCard.transform;
         drawnCard.position = cardHandSpawn.position;
+        drawnCard.parent = handParent;
         cardsInHand.Add(drawnCard.gameObject);
 
         List<Vector3> cardOldPositions = new List<Vector3>();
         for (int i = 0; i < handSize; i++)
         {
-            cardOldPositions.Add(cardsInHand[i].transform.position);
+            cardOldPositions.Add(cardsInHand[i].transform.localPosition);
         }
 
         cardPositions.Clear();
         for (int i = 0; i < handSize; i++)
         {
-            cardPositions.Add(handParent.position + (handParent.right * -1) * (handSize * cardSpace * 0.5f) + (handParent.right * (i + 0.5f) * cardSpace) + (handParent.right*-0.073f*(5-handSize)));
+            cardPositions.Add((handParent.right * -1) * (handSize * cardSpace * 0.5f) + (handParent.right * (i + 0.5f) * cardSpace) + (handParent.right*-0.073f*(5-handSize)));
         }
 
         counter1 = 0;
@@ -142,7 +144,7 @@ public class CardManager : MonoBehaviour
             counter1 += Time.deltaTime * drawSpeed;
             for (int i = 0; i < handSize; i++)
             {
-                cardsInHand[i].transform.position = Vector3.Lerp(cardOldPositions[i], cardPositions[i], counter1);
+                cardsInHand[i].transform.localPosition = Vector3.Lerp(cardOldPositions[i], cardPositions[i], counter1);
             }
             yield return new WaitForEndOfFrame();
         }
@@ -196,7 +198,7 @@ public class CardManager : MonoBehaviour
         handSize--;
 
         discardedCard.parent = discardParent;
-        CardManager.Instance.selectedCard.SetCardSpritesOnLayer(618660229, 100);
+        CardManager.Instance.selectedCard.SetCardSpritesOnLayer(888, 10+cardsInDiscard.Count*10);
         CardManager.Instance.selectedCard.UnselectCard();
         CardManager.Instance.selectedCard = null;
         cardsInDiscard.Add(discardedCard.gameObject);
@@ -264,9 +266,11 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator PickCard(int tier, int picks)
     {
-
+        
+        FlowManager.Instance.SetState(FlowManager.GameState.ChoosingCard);
         StartCoroutine(HideHand());
         StartCoroutine(FlowManager.Instance.OverlayIn());
+        yield return new WaitForSeconds(1);
         lockPickAnim.SetTrigger("unlock");
 
         List<GameObject> cardPicks = new List<GameObject>();
@@ -293,10 +297,15 @@ public class CardManager : MonoBehaviour
             }
         }
 
+        yield return new WaitForSeconds(2.5f);
+        //SAFETY:
+        FlowManager.Instance.SetState(FlowManager.GameState.ChoosingCard);
+
+        cardPickGOs.Clear();
         for (int j = 0; j< cardPicks.Count;j++)
         {
             GameObject cardGO = Instantiate(cardPicks[j], cardPickSpawn.position, Quaternion.identity) as GameObject;
-            cardGO.transform.position += (cardPickSpawn.right * -1) * (cardPicks.Count * cardPickSpace * 0.5f) + (cardPickSpawn.right * (j + 0.5f) * cardPickSpace);
+            cardGO.transform.position += (cardPickSpawn.right * -1) * ((cardPicks.Count-1) * cardPickSpace * 0.5f) + (cardPickSpawn.right * j * cardPickSpace);
             cardGO.GetComponent<Card>().SetCardSpritesOnLayer(999, 0);
             cardPickGOs.Add(cardGO);
         }
@@ -314,11 +323,71 @@ public class CardManager : MonoBehaviour
             float t = Mathf.Sin(counter * Mathf.PI * 0.5f);
             for(int l = 0; l<cardPickGOs.Count;l++)
             {
-                cardPickGOs[l].transform.position = Vector3.Lerp(pickOldPos[l], pickOldPos[l] + new Vector3(-pickYpos, 0, 0), t);
+                cardPickGOs[l].transform.position = Vector3.Lerp(pickOldPos[l], pickOldPos[l] + new Vector3(0, -pickYpos, 0), t);
             }
             yield return new WaitForEndOfFrame();
 
         }
+    }
+
+    public IEnumerator ChooseCard(GameObject go)
+    {
+        int i = cardPickGOs.IndexOf(go.gameObject);
+
+        List<Vector3> pickOldPos = new List<Vector3>();
+        for (int k = 0; k < cardPickGOs.Count; k++)
+        {
+            pickOldPos.Add(cardPickGOs[k].transform.position);
+        }
+
+        float counter = 0;
+        while (counter < 1)
+        {
+            counter += Time.deltaTime * cardPickAnimSpeed;
+            for (int l = 0; l < cardPickGOs.Count; l++)
+            {
+                if (l!= i)
+                {
+                    cardPickGOs[l].transform.position = Vector3.Lerp(pickOldPos[l], pickOldPos[l] + new Vector3(0, -pickYhide, 0), counter);
+                }
+            }
+            yield return new WaitForEndOfFrame();
+        }
+
+        Vector3 oldPos = cardPickGOs[i].transform.position;
+        float counter2 = 0;
+        while (counter2 < 1)
+        {
+            counter2 += Time.deltaTime * cardPickAnimSpeed;
+            cardPickGOs[i].transform.position = Vector3.Lerp(oldPos, oldPos + new Vector3(pickYhide, 0, 0), counter2);
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(FlowManager.Instance.OverlayOut());
+        AddCardToDeck(cardPickGOs[i]);
+        yield return new WaitForSeconds(1);
+        StartCoroutine(ShowHand());
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+
+        for (int j = 0; j < cardPickGOs.Count; j++)
+        {
+            if (j != i)
+            {
+                Destroy(cardPickGOs[j]);
+            }
+        }
+        
+
+    }
+
+    public void AddCardToDeck(GameObject card)
+    {
+        cardsInDeck.Add(card);
+        card.transform.position = cardHandSpawn.position;
+        totalCards++;
+        deckAnim.SetTrigger("Add");
     }
 
     public IEnumerator HideHand()

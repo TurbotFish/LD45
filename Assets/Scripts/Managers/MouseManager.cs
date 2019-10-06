@@ -21,7 +21,7 @@ public class MouseManager : MonoBehaviour
                 {
                     Card card = hitInfo.collider.GetComponent<Card>();
 
-                    if (CardManager.Instance.canSelectCard)
+                    if (CardManager.Instance.canSelectCard && !card.discarded)
                     {
                         if (CardManager.Instance.selectedCard != null)
                         {

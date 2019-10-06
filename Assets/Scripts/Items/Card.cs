@@ -54,29 +54,39 @@ public class Card : MonoBehaviour
         anim.SetBool("hover", false);
         anim.SetBool("selected", true);
         CardManager.Instance.selectedCard = this;
-        FlowManager.Instance.SetState(FlowManager.GameState.Casting);
 
-        if (cardType == CardManager.CardType.Heart)
+        if (FlowManager.Instance.state == FlowManager.GameState.Idle)
         {
-            BoardManager.Instance.HighlightFreeCells();
-        }
+            FlowManager.Instance.SetState(FlowManager.GameState.Casting);
 
-        else if (cardType == CardManager.CardType.CorruptedHeart
-            || cardType == CardManager.CardType.Shield
-            || cardType == CardManager.CardType.Sword
-            || cardType == CardManager.CardType.Orb
-            || cardType == CardManager.CardType.TinyHeart
-            || cardType == CardManager.CardType.Arrow
-            || cardType == CardManager.CardType.Heal)
-        {
-            BoardManager.Instance.HighlightAdjacents();
-        }
+            if (cardType == CardManager.CardType.Heart)
+            {
+                BoardManager.Instance.HighlightFreeCells();
+            }
 
-        else if (cardType == CardManager.CardType.Consume
-            || cardType == CardManager.CardType.Bubble)
-        {
-            BoardManager.Instance.HighlightPlayerItems();
+            else if (cardType == CardManager.CardType.CorruptedHeart
+                || cardType == CardManager.CardType.Shield
+                || cardType == CardManager.CardType.Sword
+                || cardType == CardManager.CardType.Orb
+                || cardType == CardManager.CardType.TinyHeart
+                || cardType == CardManager.CardType.Arrow
+                || cardType == CardManager.CardType.Heal)
+            {
+                BoardManager.Instance.HighlightAdjacents();
+            }
+
+            else if (cardType == CardManager.CardType.Consume
+                || cardType == CardManager.CardType.Bubble)
+            {
+                BoardManager.Instance.HighlightPlayerItems();
+            }
         }
+        else if (FlowManager.Instance.state == FlowManager.GameState.ChoosingCard)
+        {
+            StartCoroutine(CardManager.Instance.ChooseCard(this.gameObject));
+        }
+            
+        
 
     }
 
@@ -265,9 +275,9 @@ public class Card : MonoBehaviour
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         StartCoroutine(BoardManager.Instance.ArrowAttack(x,y));
         yield return new WaitForSeconds(1f);
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         yield return new WaitForSeconds(0.5f);
-        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         StartCoroutine(CardManager.Instance.DrawCard());
 
     }

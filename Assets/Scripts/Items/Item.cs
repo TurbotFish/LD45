@@ -73,6 +73,9 @@ public class Item : MonoBehaviour
 
     public void Consume()
     {
+
+        BoardManager.Instance.InstantiateFX(x, y, CardManager.Instance.consumeFX, 1.5f);
+
         if (type == CardManager.CardType.Heart ||
             type == CardManager.CardType.TinyHeart ||
             type == CardManager.CardType.CorruptedHeart)
