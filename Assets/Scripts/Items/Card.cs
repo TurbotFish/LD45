@@ -121,8 +121,10 @@ public class Card : MonoBehaviour
                 StartCoroutine(ResolveSword(x, y));
                 break;
             case CardManager.CardType.Shield:
+                StartCoroutine(ResolveShield(x, y));
                 break;
             case CardManager.CardType.Heal:
+                StartCoroutine(ResolveHeal(x, y));
                 break;
             case CardManager.CardType.Orb:
                 break;
@@ -139,7 +141,7 @@ public class Card : MonoBehaviour
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform));
+        StartCoroutine(CardManager.Instance.DiscardHeart(CardManager.Instance.selectedCard.transform));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         yield return new WaitForSeconds(1f);
         StartCoroutine(CardManager.Instance.DrawCard());
@@ -154,6 +156,7 @@ public class Card : MonoBehaviour
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         StartCoroutine(BoardManager.Instance.SwordAttack(x,y));
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
@@ -165,8 +168,10 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+        yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.DrawCard());
 
     }
@@ -176,10 +181,29 @@ public class Card : MonoBehaviour
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(BoardManager.Instance.SwordAttack(x, y));
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        StartCoroutine(BoardManager.Instance.Heal(x, y));
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         StartCoroutine(CardManager.Instance.DrawCard());
 
+    }
+
+    public IEnumerator ResolveOrb(int x, int y)
+    {
+        FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
+        BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+        yield return new WaitForSeconds(0.25f);
+        StartCoroutine(CardManager.Instance.DrawCard());
+
+        CardManager.Instance.orbCount++;
+        if (CardManager.Instance.orbCount <= CardManager.Instance.maxOrbs)
+        {
+            yield return new WaitForSeconds(0.25f);
+            StartCoroutine(CardManager.Instance.DrawCard());
+        }
     }
 }

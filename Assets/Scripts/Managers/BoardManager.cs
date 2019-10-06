@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class BoardManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class BoardManager : MonoBehaviour
     public float step;
     public Transform boardParent;
     public int currentZone;
+    public GameObject lockPrefab;
     public List<SpriteRenderer> lockZones = new List<SpriteRenderer>();
     public List<LockList> lockLists = new List<LockList>();
 
@@ -36,20 +38,17 @@ public class BoardManager : MonoBehaviour
     public Transform cellsParent;
     GameObject[,] cells = new GameObject[10, 10];
     public Color cellHoverColor, cellDefaultColor;
-
     public Item[,] items = new Item[10, 10];
     public List<Heart> hearts = new List<Heart>();
 
     public List<Item> connectedItems = new List<Item>();
+    List<Item> boltChainItems = new List<Item>();
 
     public List<BoardConfig> configs = new List<BoardConfig>();
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CheckIfCurrentZoneOpen();
-        }
+
     }
 
     public void Start()
@@ -58,6 +57,8 @@ public class BoardManager : MonoBehaviour
         InitializeZones();
         OpenZone(currentZone);
         InitializeCells();
+        InitializeItems(0);
+
     }
 
     public void InitializeFog()
@@ -98,7 +99,7 @@ public class BoardManager : MonoBehaviour
         }
         for (int i = 0; i < configs[configID].spawnLocks.Count; i++)
         {
-            InstantiateLock(Mathf.RoundToInt(configs[configID].spawnLocks[i].pos.x), Mathf.RoundToInt(configs[configID].spawnLocks[i].pos.y), configs[configID].spawnLocks[i].lockItem, configs[configID].spawnLocks[i].zone );
+            InstantiateLock(Mathf.RoundToInt(configs[configID].spawnLocks[i].pos.x), Mathf.RoundToInt(configs[configID].spawnLocks[i].pos.y), configs[configID].spawnLocks[i].zone );
         }
 
     }
@@ -249,9 +250,9 @@ public class BoardManager : MonoBehaviour
 
     }
 
-    public void InstantiateLock(int x, int y, GameObject goRef, int lockListID)
+    public void InstantiateLock(int x, int y, int lockListID)
     {
-        GameObject go = Instantiate(goRef, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
+        GameObject go = Instantiate(lockPrefab, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
         Item item = go.GetComponent<Item>();
         item.x = x;
         item.y = y;
@@ -294,6 +295,7 @@ public class BoardManager : MonoBehaviour
             }
         }
         yield return new WaitForEndOfFrame();
+        DOTween.Restart("camera_shake_1");
     }
 
     public IEnumerator BombAttack(int x, int y)
@@ -330,6 +332,8 @@ public class BoardManager : MonoBehaviour
             }
         }
         yield return new WaitForEndOfFrame();
+        DOTween.Restart("camera_shake_1");
+
     }
 
     public IEnumerator Heal(int x, int y)
@@ -377,6 +381,97 @@ public class BoardManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
+    public IEnumerator BoltAttack (int x, int y)
+    {
+        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int max = start + (currentZone + 1) * 2;
+
+        boltChainItems.Clear();
+        boltChainItems.Add(items[x, y]);
+
+        for (int j = 0; j < boltChainItems.Count; j++)
+        {
+
+            if (boltChainItems[j].x + 1 < max)
+            {
+                if (items[boltChainItems[j].x + 1, boltChainItems[j].y] != null)
+                {
+                    Item item = items[boltChainItems[j].x + 1, boltChainItems[j].y];
+                    if (item.player)
+                    {
+                        if (!boltChainItems.Contains(item))
+                        {
+                            boltChainItems.Add(item);
+                            if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
+                            {
+                                item.HitItem();
+                                DOTween.Restart("camera_shake_1");
+                            }
+                        }
+                    }
+                }
+            }
+            if (boltChainItems[j].x - 1 >= start)
+            {
+                if (items[boltChainItems[j].x - 1, boltChainItems[j].y] != null)
+                {
+                    Item item = items[boltChainItems[j].x - 1, boltChainItems[j].y];
+                    if (item.player)
+                    {
+                        if (!boltChainItems.Contains(item))
+                        {
+                            boltChainItems.Add(item);
+                            if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
+                            {
+                                item.HitItem();
+                                DOTween.Restart("camera_shake_1");
+                            }
+                        }
+                    }
+                }
+            }
+            if (boltChainItems[j].y+ 1 < max)
+            {
+                if (items[boltChainItems[j].x, boltChainItems[j].y + 1] != null)
+                {
+                    Item item = items[boltChainItems[j].x, boltChainItems[j].y + 1];
+                    if (item.player)
+                    {
+                        if (!boltChainItems.Contains(item))
+                        {
+                            boltChainItems.Add(item);
+                            if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
+                            {
+                                item.HitItem();
+                                DOTween.Restart("camera_shake_1");
+                            }
+                        }
+                    }
+                }
+            }
+            if (boltChainItems[j].y-1 >= start)
+            {
+                if (items[boltChainItems[j].x, boltChainItems[j].y-1] != null)
+                {
+                    Item item = items[boltChainItems[j].x, boltChainItems[j].y-1];
+                    if (item.player)
+                    {
+                        if (!boltChainItems.Contains(item))
+                        {
+                            boltChainItems.Add(item);
+                            if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
+                            {
+                                item.HitItem();
+                                DOTween.Restart("camera_shake_1");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        yield return new WaitForEndOfFrame();
+    }
 
     public void ComputeConnections()
     {
@@ -384,24 +479,10 @@ public class BoardManager : MonoBehaviour
 
         int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
         int max = start + (currentZone + 1) * 2;
-
-       /*for (int x = start; x<max;x++)
-        {
-            for (int y = start; y < max;y++)
-            {
-                if (items[x,y] != null)
-                {
-                    if (items[x,y].player)
-                    {
-                        items[x, y].connected = false;
-                        items[x, y].coTos.Clear();
-                    }
-                }
-            }
-        }*/
+        
         for (int h = 0;h<connectedItems.Count;h++)
         {
-            connectedItems[h].connected = false;
+            connectedItems[h].Disconnect();
             connectedItems[h].coFrom = null;
             connectedItems[h].coTos.Clear();
         }
@@ -411,7 +492,7 @@ public class BoardManager : MonoBehaviour
         for (int i = 0; i < hearts.Count;i++)
         {
             Item heartItem = hearts[i].GetComponent<Item>();
-            heartItem.connected = true;
+            heartItem.Connect();
             heartItem.coFrom = heartItem;
             connectedItems.Add(heartItem);
         }
@@ -426,7 +507,7 @@ public class BoardManager : MonoBehaviour
                     if (items[connectedItems[j].x + 1, connectedItems[j].y].player)
                     {
                         items[connectedItems[j].x + 1, connectedItems[j].y].coFrom = connectedItems[j];
-                        items[connectedItems[j].x + 1, connectedItems[j].y].connected = true;
+                        items[connectedItems[j].x + 1, connectedItems[j].y].Connect();
                         if (!connectedItems.Contains(items[connectedItems[j].x + 1, connectedItems[j].y]))
                         {
                             connectedItems[j].coTos.Add(items[connectedItems[j].x + 1, connectedItems[j].y]);
@@ -442,7 +523,7 @@ public class BoardManager : MonoBehaviour
                     if (items[connectedItems[j].x - 1, connectedItems[j].y].player)
                     {
                         items[connectedItems[j].x - 1, connectedItems[j].y].coFrom = connectedItems[j];
-                        items[connectedItems[j].x - 1, connectedItems[j].y].connected = true;
+                        items[connectedItems[j].x - 1, connectedItems[j].y].Connect();
                         if (!connectedItems.Contains(items[connectedItems[j].x - 1, connectedItems[j].y]))
                         {
                             connectedItems[j].coTos.Add(items[connectedItems[j].x - 1, connectedItems[j].y]);
@@ -458,7 +539,7 @@ public class BoardManager : MonoBehaviour
                     if (items[connectedItems[j].x, connectedItems[j].y + 1].player)
                     {
                         items[connectedItems[j].x, connectedItems[j].y + 1].coFrom = connectedItems[j];
-                        items[connectedItems[j].x, connectedItems[j].y + 1].connected = true;
+                        items[connectedItems[j].x, connectedItems[j].y + 1].Connect();
                         if (!connectedItems.Contains(items[connectedItems[j].x, connectedItems[j].y+1]))
                         {
                             connectedItems[j].coTos.Add(items[connectedItems[j].x, connectedItems[j].y + 1]);
@@ -474,7 +555,7 @@ public class BoardManager : MonoBehaviour
                     if (items[connectedItems[j].x, connectedItems[j].y - 1].player)
                     {
                         items[connectedItems[j].x, connectedItems[j].y - 1].coFrom = connectedItems[j];
-                        items[connectedItems[j].x, connectedItems[j].y - 1].connected = true;
+                        items[connectedItems[j].x, connectedItems[j].y - 1].Connect();
                         if (!connectedItems.Contains(items[connectedItems[j].x, connectedItems[j].y-1]))
                         {
                             connectedItems[j].coTos.Add(items[connectedItems[j].x, connectedItems[j].y - 1]);
@@ -485,6 +566,8 @@ public class BoardManager : MonoBehaviour
             }
         }
     }
+
+
 }
 
 [System.Serializable]
@@ -505,7 +588,6 @@ public class SpawnItem
 [System.Serializable]
 public class SpawnLock
 {
-    public GameObject lockItem;
     public int zone;
     public Vector2 pos;
 }

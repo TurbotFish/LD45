@@ -200,10 +200,10 @@ TextureImporter:
       name: board
       rect:
         serializedVersion: 2
-        x: 6
-        y: 124
-        width: 303
-        height: 303
+        x: 22
+        y: 350
+        width: 61
+        height: 61
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -793,7 +793,7 @@ TextureImporter:
         width: 17
         height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

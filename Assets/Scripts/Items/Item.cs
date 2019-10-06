@@ -11,7 +11,8 @@ public class Item : MonoBehaviour
     public Item coFrom;
     public List<Item> coTos = new List<Item>();
     public bool connected;
-
+    public SpriteRenderer sprite;
+    public Color connectedColor, disconnectedColor;
 
     public void HitItem()
     {
@@ -28,14 +29,44 @@ public class Item : MonoBehaviour
 
         if (type == CardManager.CardType.Bomb)
         {
-            GetComponent<Bomb>().Explode();
+            StartCoroutine(BoardManager.Instance.BombAttack(x, y));
         }
+
+        if (type == CardManager.CardType.Bolt)
+        {
+            StartCoroutine(BoardManager.Instance.BoltAttack(x, y));
+        }
+
+
+        if (type == CardManager.CardType.Heal || type == CardManager.CardType.Sword)
+        {
+            DestroyItem();
+        }
+
+        if (type == CardManager.CardType.Orb)
+        {
+            GetComponent<Orb>().DestroyOrb();
+        }
+
     }
 
     public void DestroyItem()
     {
         BoardManager.Instance.items[x, y] = null;
         BoardManager.Instance.ComputeConnections();
-        Destroy(this);
+        Destroy(this.gameObject);
     }
+
+    public void Disconnect()
+    {
+        connected = false;
+        sprite.color = disconnectedColor;
+    }
+
+    public void Connect()
+    {
+        connected = true;
+        sprite.color = connectedColor;
+    }
+
 }

@@ -28,6 +28,7 @@ public class Heart : MonoBehaviour
     public void Heal()
     {
         health = (health >= 2) ? 2 : health + 1;
+        heartAnim.SetInteger("hp", health);
     }
 
     public void DestroyHeart()

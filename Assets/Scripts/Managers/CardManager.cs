@@ -44,6 +44,7 @@ public class CardManager : MonoBehaviour
 
     public List<GameObject> cardsInHand = new List<GameObject>();
     public Transform cardHandSpawn;
+    public Transform heartHandStore;
     public GameObject heartCard;
     public int handSize;
     public float cardSpace;
@@ -54,12 +55,15 @@ public class CardManager : MonoBehaviour
     float counter2;
     float counter3;
 
+    public int orbCount;
+    public int maxOrbs = 2;
 
     public IEnumerator DrawCard()
     {
         handSize++;
 
         Transform drawnCard = cardsInDeck[0].transform;
+        drawnCard.position = cardHandSpawn.position;
 
         cardsInDeck.RemoveAt(0);
         cardsInHand.Add(drawnCard.gameObject);
@@ -74,7 +78,7 @@ public class CardManager : MonoBehaviour
         cardPositions.Clear();
         for(int i =0;i< handSize; i++)
         {
-            cardPositions.Add(handParent.position + (handParent.right*-1)*(handSize*cardSpace*0.5f)+ (handParent.right * (i+0.5f)*cardSpace));
+            cardPositions.Add(handParent.position + (handParent.right*-1)*(handSize*cardSpace*0.5f)+ (handParent.right * (i+0.5f)*cardSpace) + (handParent.right * -0.073f * (5 - handSize)));
         }
 
         yield return new WaitForSeconds(0.01f);
@@ -100,6 +104,7 @@ public class CardManager : MonoBehaviour
         handSize++;
 
         Transform drawnCard = heartCard.transform;
+        drawnCard.position = cardHandSpawn.position;
         cardsInHand.Add(drawnCard.gameObject);
 
         List<Vector3> cardOldPositions = new List<Vector3>();
@@ -111,7 +116,7 @@ public class CardManager : MonoBehaviour
         cardPositions.Clear();
         for (int i = 0; i < handSize; i++)
         {
-            cardPositions.Add(handParent.position + (handParent.right * -1) * (handSize * cardSpace * 0.5f) + (handParent.right * (i + 0.5f) * cardSpace));
+            cardPositions.Add(handParent.position + (handParent.right * -1) * (handSize * cardSpace * 0.5f) + (handParent.right * (i + 0.5f) * cardSpace) + (handParent.right*-0.073f*(5-handSize)));
         }
 
         counter1 = 0;
@@ -149,7 +154,7 @@ public class CardManager : MonoBehaviour
             }
 
             List<Vector3> cardOldPositions = new List<Vector3>();
-            for (int m = 0; m < handSize; m++)
+            for (int m = 0; m < cardsInDiscard.Count; m++)
             {
                 cardOldPositions.Add(cardsInDiscard[m].transform.position);
             }
@@ -169,7 +174,7 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public IEnumerator Discard(Transform discardedCard)
+    public IEnumerator Discard(Transform discardedCard, bool followedByDraw)
     {
         handSize--;
 
@@ -179,6 +184,7 @@ public class CardManager : MonoBehaviour
         CardManager.Instance.selectedCard = null;
         cardsInDiscard.Add(discardedCard.gameObject);
         cardsInHand.Remove(discardedCard.gameObject);
+        discardedCard.GetComponent<Card>().discarded = true;
 
         List<Vector3> cardOldPositions = new List<Vector3>();
         for (int i = 0; i < handSize; i++)
@@ -202,20 +208,43 @@ public class CardManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-
-        counter2 = 0;
-        while (counter2 < 1)
+        if (!followedByDraw)
         {
-            counter2 += Time.deltaTime * drawSpeed;
-            for (int i = 0; i < handSize; i++)
+            counter2 = 0;
+            while (counter2 < 1)
             {
-                cardsInHand[i].transform.position = Vector3.Lerp(cardOldPositions[i], cardPositions[i], counter2);
+                counter2 += Time.deltaTime * drawSpeed;
+                for (int i = 0; i < handSize - 1; i++)
+                {
+                    cardsInHand[i].transform.position = Vector3.Lerp(cardOldPositions[i], cardPositions[i], counter2);
+                }
+                yield return new WaitForEndOfFrame();
             }
-            yield return new WaitForEndOfFrame();
         }
-
         posCycle = (posCycle == discardPositions.Count - 1) ? 0 : posCycle++;
     }
+
+    public IEnumerator DiscardHeart(Transform discardedCard)
+    {
+        handSize--;
+
+        discardedCard.parent = discardParent;
+        CardManager.Instance.selectedCard.UnselectCard();
+        CardManager.Instance.selectedCard = null;
+        cardsInHand.Remove(discardedCard.gameObject);   
+
+        Vector3 discardedOldPos = discardedCard.position;
+
+        counter1 = 0;
+        while (counter1 < 1)
+        {
+            counter1 += Time.deltaTime * drawSpeed;
+            discardedCard.position = Vector3.Lerp(discardedOldPos, heartHandStore.position, counter1);
+            yield return new WaitForEndOfFrame();
+        }       
+
+    }
+
 }
 
 

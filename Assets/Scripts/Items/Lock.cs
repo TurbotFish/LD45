@@ -9,6 +9,7 @@ public class Lock : MonoBehaviour
     public void OpenLock()
     {
         open = true;
+        GetComponent<Item>().DestroyItem();
         BoardManager.Instance.CheckIfCurrentZoneOpen();
     }
 }

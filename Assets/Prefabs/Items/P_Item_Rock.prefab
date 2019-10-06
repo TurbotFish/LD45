@@ -47,6 +47,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 11
   player: 0
+  x: 0
+  y: 0
+  coFrom: {fileID: 0}
+  coTos: []
+  connected: 0
+  sprite: {fileID: 8431741377025737095}
+  connectedColor: {r: 1, g: 1, b: 1, a: 1}
+  disconnectedColor: {r: 0.58259165, g: 0.5785867, b: 0.6226415, a: 1}
 --- !u!61 &8431741375846602005
 BoxCollider2D:
   m_ObjectHideFlags: 0
