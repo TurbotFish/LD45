@@ -15,6 +15,8 @@ public class MouseManager : MonoBehaviour
             if (hitInfo.collider != null)
             {
 
+                //+++++++++++++++++++++++++++++++++++++++++++++++CARD SELECTION
+                
                 if (hitInfo.collider.GetComponent<Card>())
                 {
                     Card card = hitInfo.collider.GetComponent<Card>();
@@ -28,6 +30,21 @@ public class MouseManager : MonoBehaviour
                         card.SelectCard();
                     }
                 }
+
+
+                //+++++++++++++++++++++++++++++++++++++++++++++++CASTING
+
+                else if (hitInfo.collider.GetComponent<Cell>())
+                {
+                    if (FlowManager.Instance.state == FlowManager.GameState.Casting)
+                    {
+                        Cell cell = hitInfo.collider.GetComponent<Cell>();
+                        CardManager.Instance.selectedCard.ResolveCard(cell.x, cell.y);
+                    }
+
+                }
+
+
             }
             else
             {

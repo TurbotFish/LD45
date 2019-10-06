@@ -47,9 +47,18 @@ TagManager:
   - name: AboveFog
     uniqueID: 929017559
     locked: 0
-  - name: Draw
-    uniqueID: 2562586063
+  - name: TextBox
+    uniqueID: 3313353491
+    locked: 0
+  - name: Deck
+    uniqueID: 25625860
+    locked: 0
+  - name: Discard
+    uniqueID: 2625574307
     locked: 0
   - name: Hand
     uniqueID: 1606947709
+    locked: 0
+  - name: OverlayCard
+    uniqueID: 618660229
     locked: 0

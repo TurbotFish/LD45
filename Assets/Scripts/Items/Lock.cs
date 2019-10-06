@@ -9,5 +9,6 @@ public class Lock : MonoBehaviour
     public void OpenLock()
     {
         open = true;
+        BoardManager.Instance.CheckIfCurrentZoneOpen();
     }
 }

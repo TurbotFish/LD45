@@ -86,6 +86,9 @@ TextureImporter:
   - first:
       213: 8528560868397465153
     second: select_zone_2
+  - first:
+      213: 1345306425142338037
+    second: UI_arrow
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -769,7 +772,7 @@ TextureImporter:
         width: 33
         height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -777,6 +780,27 @@ TextureImporter:
       bones: []
       spriteID: 00dbb3491b162b945b4459148f0c1214
       internalID: 8528560868397465153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_arrow
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 246
+        width: 17
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f15f2e0cde5f9d649812c9d7fb8a8c8a
+      internalID: 1345306425142338037
       vertices: []
       indices: 
       edges: []
