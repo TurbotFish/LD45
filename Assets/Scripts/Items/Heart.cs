@@ -6,10 +6,12 @@ public class Heart : MonoBehaviour
 {
     public int health;
     public Animator heartAnim;
+    int startHealth;
 
     private void Start()
     {
         heartAnim.SetInteger("hp", health);
+        startHealth = health;
     }
 
     public void HitHeart()
@@ -27,7 +29,7 @@ public class Heart : MonoBehaviour
 
     public void Heal()
     {
-        health = (health >= 2) ? 2 : health + 1;
+        health = (health >= startHealth) ? startHealth : health + 1;
         heartAnim.SetInteger("hp", health);
     }
 

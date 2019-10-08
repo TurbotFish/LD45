@@ -57,11 +57,11 @@ public class Card : MonoBehaviour
 
         if (FlowManager.Instance.tuto)
         {
-            if (FlowManager.Instance.tutoStep == 1)
+            if (FlowManager.Instance.tutoStep == 1 && cardType == CardManager.CardType.Heart)
             {
                 StartCoroutine(FlowManager.Instance.TutoStepTwo());
             }
-            else if (FlowManager.Instance.tutoStep == 3)
+            else if (FlowManager.Instance.tutoStep == 3 && cardType == CardManager.CardType.Sword)
             {
                 StartCoroutine(FlowManager.Instance.TutoStepThreeHalf());
             }
@@ -110,7 +110,7 @@ public class Card : MonoBehaviour
             {
                 StartCoroutine(FlowManager.Instance.TutoStepOne());
             }
-            else if (FlowManager.Instance.tutoStep == 3)
+            else if (FlowManager.Instance.tutoStep == 35)
             {
                 StartCoroutine(FlowManager.Instance.TutoStepThree(false));
             }
@@ -140,6 +140,10 @@ public class Card : MonoBehaviour
     public void ResolveCard(int x, int y)
     {
         BoardManager.Instance.HideCells();
+        if (CardManager.Instance.selectedCard != null)
+        {
+            CardManager.Instance.cardsInHand.Remove(CardManager.Instance.selectedCard.gameObject);
+        }
 
         switch (cardType)
         {
@@ -232,6 +236,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
@@ -246,6 +251,7 @@ public class Card : MonoBehaviour
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
+        BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
@@ -259,6 +265,7 @@ public class Card : MonoBehaviour
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
+        BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
@@ -278,6 +285,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         StartCoroutine(BoardManager.Instance.Heal(x, y));
@@ -291,6 +299,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
@@ -309,9 +318,10 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateFX(x, y, CardManager.Instance.consumeFX, 1);
+        BoardManager.Instance.items[x, y].Consume();
+        BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
-        BoardManager.Instance.items[x, y].Consume();
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         StartCoroutine(CardManager.Instance.DrawCard());
@@ -325,7 +335,11 @@ public class Card : MonoBehaviour
         StartCoroutine(BoardManager.Instance.ArrowAttack(x,y));
         yield return new WaitForSeconds(1f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        if (CardManager.Instance.selectedCard != null)
+        {
+            StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+
+        }
         yield return new WaitForSeconds(0.5f);
         StartCoroutine(CardManager.Instance.DrawCard());
 

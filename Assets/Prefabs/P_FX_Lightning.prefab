@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3965029949578463733}
   - component: {fileID: 3965029949578463730}
   m_Layer: 0
-  m_Name: P_FX_Boom
+  m_Name: P_FX_Lightning
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,9 +70,9 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: -999367187751983204, guid: 91d6fa1f11308cb4db2e67ad33f99f5e,
+  m_Sprite: {fileID: -1152708579528775845, guid: 91d6fa1f11308cb4db2e67ad33f99f5e,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9622642, g: 0.8786784, b: 0.6853863, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -92,7 +92,7 @@ Animator:
   m_GameObject: {fileID: 3965029949578463731}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 09a053d6259680947b24d375b91b6b92, type: 2}
+  m_Controller: {fileID: 9100000, guid: eb1aff57a58a144f09d9471e8f5ad46c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

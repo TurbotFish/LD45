@@ -54,6 +54,21 @@ public class BoardManager : MonoBehaviour
 
     public void ResetBoard(int configID)
     {
+        foreach (LockList ll in lockLists)
+        {
+            ll.locks.Clear();
+        }
+        foreach (GameObject g in storeItems)
+        {
+            Destroy(g);
+        }
+
+        connectedItems.Clear();
+
+        hearts.Clear();
+
+        HideCells();
+
         InitializeItems(configID);
         InitializeFog(false);
         InitializeZones();
@@ -97,10 +112,7 @@ public class BoardManager : MonoBehaviour
 
     public void InitializeItems(int configID)
     {
-        foreach(GameObject g in storeItems)
-        {
-            Destroy(g);
-        }
+
         for (int i = 0; i < configs[configID].spawnItems.Count;i++)
         {
             InstantiateItem(Mathf.RoundToInt(configs[configID].spawnItems[i].pos.x), Mathf.RoundToInt(configs[configID].spawnItems[i].pos.y), configs[configID].spawnItems[i].item);
@@ -114,7 +126,10 @@ public class BoardManager : MonoBehaviour
 
     public void SetFogOpacityAt(int x, int y, float a)
     {
-        fogs[x, y].color = new Color(fogs[x, y].color.r, fogs[x, y].color.g, fogs[x, y].color.b, a);
+        if (x >= 0 && y >= 0 && x < maxWidth && y < maxWidth)
+        {
+            fogs[x, y].color = new Color(fogs[x, y].color.r, fogs[x, y].color.g, fogs[x, y].color.b, a);
+        }
     }
 
     public void CheckIfCurrentZoneOpen()
@@ -123,6 +138,10 @@ public class BoardManager : MonoBehaviour
         foreach(Lock l in lockLists[currentZone].locks)
         {
             open = l.open;
+            if (!open)
+            {
+                break;
+            }
         }
         if (open)
         {
@@ -157,7 +176,7 @@ public class BoardManager : MonoBehaviour
             lockZoneAnims[currentZone].SetBool("dead", false); ;
             lockZones[currentZone].sortingLayerName = "AboveFog";
 
-            int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+            int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
             int max = start + (currentZone + 1) * 2;
 
             for (int x = start; x < max; x++)
@@ -197,7 +216,7 @@ public class BoardManager : MonoBehaviour
     {
         ComputeConnections();
 
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
         int max = start + (currentZone + 1) * 2;
 
         for(int i = 0; i < connectedItems.Count;i++)
@@ -254,7 +273,7 @@ public class BoardManager : MonoBehaviour
     public void HighlightFreeCells()
     {
 
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
         int max = start+ (currentZone + 1) * 2;
 
         for (int x = start; x < max; x++)
@@ -291,9 +310,13 @@ public class BoardManager : MonoBehaviour
         GameObject go = Instantiate(goRef, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
         storeItems.Add(go);
         Item item = go.GetComponent<Item>();
+
         item.x = x;
         item.y = y;
         items[x, y] = item;
+
+        item.Disconnect();
+        ComputeConnections();
 
     }
 
@@ -301,6 +324,7 @@ public class BoardManager : MonoBehaviour
     {
         GameObject go = Instantiate(lockPrefab, cells[x, y].transform.position, Quaternion.identity, boardParent) as GameObject;
         Item item = go.GetComponent<Item>();
+        storeItems.Add(go);
         item.x = x;
         item.y = y;
         items[x, y] = item;
@@ -310,7 +334,7 @@ public class BoardManager : MonoBehaviour
 
     public IEnumerator SwordAttack(int x, int y)
     {
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
         int max = start + (currentZone + 1) * 2;
 
         if (x+1 < max)
@@ -318,36 +342,40 @@ public class BoardManager : MonoBehaviour
             if (items[x + 1,y]!=null)
             {
                 items[x + 1, y].HitItem();
-                InstantiateFX(x + 1, y, CardManager.Instance.swordFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x + 1, y, CardManager.Instance.swordFX, 1.5f);
+
         }
         if (x - 1 >= start)
         {
             if (items[x - 1, y] != null)
             {
                 items[x - 1, y].HitItem();
-                InstantiateFX(x - 1, y, CardManager.Instance.swordFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x - 1, y, CardManager.Instance.swordFX, 1.5f);
+
         }
         if (y + 1 < max)
         {
             if (items[x, y+1] != null)
             {
                 items[x, y+1].HitItem();
-                InstantiateFX(x, y+1, CardManager.Instance.swordFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x, y + 1, CardManager.Instance.swordFX, 1.5f);
+
         }
         if (y - 1 >= start)
         {
             if (items[x, y-1] != null)
             {
                 items[x, y-1].HitItem();
-                InstantiateFX(x, y - 1, CardManager.Instance.swordFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x, y - 1, CardManager.Instance.swordFX, 1.5f);
+
         }
         yield return new WaitForEndOfFrame();
         ComputeConnections();
@@ -355,7 +383,7 @@ public class BoardManager : MonoBehaviour
 
     public IEnumerator BombAttack(int x, int y)
     {
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
         int max = start + (currentZone + 1) * 2;
 
         if (x + 1 < max)
@@ -363,38 +391,43 @@ public class BoardManager : MonoBehaviour
             if (items[x + 1, y] != null)
             {
                 items[x + 1, y].HitItem();
-                InstantiateFX(x + 1, y, CardManager.Instance.bombFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x + 1, y, CardManager.Instance.bombFX, 1.5f);
+
         }
         if (x - 1 >= start)
         {
             if (items[x - 1, y] != null)
             {
                 items[x - 1, y].HitItem();
-                InstantiateFX(x-1, y, CardManager.Instance.bombFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x - 1, y, CardManager.Instance.bombFX, 1.5f);
+
         }
         if (y + 1 < max)
         {
             if (items[x, y + 1] != null)
             {
                 items[x, y + 1].HitItem();
-                InstantiateFX(x, y + 1, CardManager.Instance.bombFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x, y + 1, CardManager.Instance.bombFX, 1.5f);
+
         }
         if (y - 1 >= start)
         {
             if (items[x, y - 1] != null)
             {
                 items[x, y - 1].HitItem();
-                InstantiateFX(x, y - 1, CardManager.Instance.bombFX, 1.5f);
                 DOTween.Restart("camera_shake_1");
             }
+            InstantiateFX(x, y - 1, CardManager.Instance.bombFX, 1.5f);
+
         }
         yield return new WaitForEndOfFrame();
+        ComputeConnections();
 
     }
 
@@ -406,10 +439,11 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x + 1, y].GetComponent<Heart>() != null)
                 {
-                    InstantiateFX(x+1, y, CardManager.Instance.healFX, 1.5f);
                     items[x + 1, y].GetComponent<Heart>().Heal();
                 }
             }
+            InstantiateFX(x + 1, y, CardManager.Instance.healFX, 1.5f);
+
         }
         if (x - 1 >= 0)
         {
@@ -417,10 +451,11 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x - 1, y].GetComponent<Heart>() != null)
                 {
-                    InstantiateFX(x - 1, y, CardManager.Instance.healFX, 1.5f);
                     items[x - 1, y].GetComponent<Heart>().Heal();
                 }
             }
+            InstantiateFX(x - 1, y, CardManager.Instance.healFX, 1.5f);
+
         }
         if (y + 1 < maxWidth)
         {
@@ -428,10 +463,11 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x, y + 1].GetComponent<Heart>() != null)
                 {
-                    InstantiateFX(x, y + 1, CardManager.Instance.healFX, 1.5f);
                     items[x, y + 1].GetComponent<Heart>().Heal();
                 }
             }
+            InstantiateFX(x, y + 1, CardManager.Instance.healFX, 1.5f);
+
         }
         if (y - 1 >= 0)
         {
@@ -439,17 +475,18 @@ public class BoardManager : MonoBehaviour
             {
                 if (items[x, y - 1].GetComponent<Heart>() != null)
                 {
-                    InstantiateFX(x, y - 1, CardManager.Instance.healFX, 1.5f);
                     items[x, y - 1].GetComponent<Heart>().Heal();
                 }
             }
+            InstantiateFX(x, y - 1, CardManager.Instance.healFX, 1.5f);
+
         }
         yield return new WaitForEndOfFrame();
     }
 
     public IEnumerator BoltAttack (int x, int y)
     {
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
         int max = start + (currentZone + 1) * 2;
 
         boltChainItems.Clear();
@@ -467,6 +504,7 @@ public class BoardManager : MonoBehaviour
                     {
                         if (!boltChainItems.Contains(item))
                         {
+                            InstantiateFX(item.x, item.y, CardManager.Instance.lightningFX, 1.5f);
                             boltChainItems.Add(item);
                             if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
                             {
@@ -486,6 +524,7 @@ public class BoardManager : MonoBehaviour
                     {
                         if (!boltChainItems.Contains(item))
                         {
+                            InstantiateFX(item.x, item.y, CardManager.Instance.lightningFX, 1.5f);
                             boltChainItems.Add(item);
                             if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
                             {
@@ -505,6 +544,7 @@ public class BoardManager : MonoBehaviour
                     {
                         if (!boltChainItems.Contains(item))
                         {
+                            InstantiateFX(item.x, item.y, CardManager.Instance.lightningFX, 1.5f);
                             boltChainItems.Add(item);
                             if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
                             {
@@ -524,6 +564,7 @@ public class BoardManager : MonoBehaviour
                     {
                         if (!boltChainItems.Contains(item))
                         {
+                            InstantiateFX(item.x, item.y, CardManager.Instance.lightningFX, 1.5f);
                             boltChainItems.Add(item);
                             if (item.type == CardManager.CardType.Heart || item.type == CardManager.CardType.CorruptedHeart || item.type == CardManager.CardType.TinyHeart)
                             {
@@ -543,7 +584,7 @@ public class BoardManager : MonoBehaviour
 
     public IEnumerator ArrowAttack (int x, int y)
     {
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1), 0, maxWidth);
         int max = start + (currentZone + 1) * 2;
 
         Vector3 arrowSpawn = cells[x,y].transform.position;
@@ -643,7 +684,7 @@ public class BoardManager : MonoBehaviour
                     if (contactItems[i] != null && arrows[i] !=null)
                     {
                         contactItems[i].HitItem();
-                        InstantiateFX(contactItems[i].x, contactItems[i].y, CardManager.Instance.bombFX, 1.5f);
+                        InstantiateFX(contactItems[i].x, contactItems[i].y, CardManager.Instance.explosionFX, 1.5f);
                     }
                     Destroy(arrows[i]);
 
@@ -652,6 +693,8 @@ public class BoardManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
 
         }
+
+        ComputeConnections();
 
 
 
@@ -669,7 +712,7 @@ public class BoardManager : MonoBehaviour
     {
 
 
-        int start = Mathf.FloorToInt(maxWidth * 0.5f) - ((currentZone + 1));
+        int start = Mathf.Clamp(Mathf.FloorToInt(maxWidth * 0.5f) - (currentZone + 1),0,maxWidth);
         int max = start + (currentZone + 1) * 2;
         
         for (int h = 0;h<connectedItems.Count;h++)
@@ -756,6 +799,11 @@ public class BoardManager : MonoBehaviour
                     }
                 }
             }
+        }
+
+        foreach(Item it in connectedItems)
+        {
+            it.Connect();
         }
     }
 

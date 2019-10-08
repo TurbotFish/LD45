@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3965029949578463733}
   - component: {fileID: 3965029949578463730}
   m_Layer: 0
-  m_Name: P_FX_Boom
+  m_Name: P_FX_Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingOrder: 10
   m_Sprite: {fileID: -999367187751983204, guid: 91d6fa1f11308cb4db2e67ad33f99f5e,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.93333334, g: 0.54883665, b: 0.53333336, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

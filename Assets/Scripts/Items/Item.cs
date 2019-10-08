@@ -39,15 +39,12 @@ public class Item : MonoBehaviour
         }
 
 
-        if (type == CardManager.CardType.Heal || type == CardManager.CardType.Sword)
+        if (type == CardManager.CardType.Heal || type == CardManager.CardType.Sword || type == CardManager.CardType.Orb)
         {
             DestroyItem();
         }
 
-        if (type == CardManager.CardType.Orb)
-        {
-            GetComponent<Orb>().DestroyOrb();
-        }
+
 
         BoardManager.Instance.ComputeConnections();
 
@@ -55,21 +52,38 @@ public class Item : MonoBehaviour
 
     public void DestroyItem()
     {
+
         BoardManager.Instance.items[x, y] = null;
         BoardManager.Instance.ComputeConnections();
+        if (type == CardManager.CardType.Orb)
+        {
+            CardManager.Instance.DestroyOrb();
+        }
         Destroy(this.gameObject);
     }
 
     public void Disconnect()
     {
-        connected = false;
-        sprite.color = disconnectedColor;
+        if (type != CardManager.CardType.CorruptedHeart &&
+            type != CardManager.CardType.TinyHeart &&
+            type != CardManager.CardType.Heart &&
+            type != CardManager.CardType.Bolt &&
+            type != CardManager.CardType.Rock &&
+            type != CardManager.CardType.Bomb &&
+            type != CardManager.CardType.Lock)
+        {
+            connected = false;
+            if (sprite!= null)
+                sprite.color = disconnectedColor;
+        }
+
     }
 
     public void Connect()
     {
         connected = true;
-        sprite.color = connectedColor;
+        if (sprite!= null)
+            sprite.color = connectedColor;
     }
 
     public void Consume()

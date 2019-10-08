@@ -34,7 +34,15 @@ public class FlowManager : MonoBehaviour
     public bool tuto = true;
     public bool noInput;
     public GameObject gameOverText;
+    public LaunchGameButton menuButton, thankYouButton;
 
+    public void Update()
+    {
+        /*if (Input.GetKeyDown(KeyCode.A))
+        {
+            StartCoroutine(Win());
+        }*/
+    }
     public void SetState(GameState s)
     {
         state = s;
@@ -90,9 +98,11 @@ public class FlowManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
     }
-    public IEnumerator ScreenTransition(float speed, float inBetweenTime, bool menuState)
+    public IEnumerator ScreenTransition(float speed, float inBetweenTime, bool menuState, bool thankyouState)
     {
         //yield return new WaitForSeconds(inBetweenTime*0.25f);
+
+
 
         float counter = 0;
         while (counter < 1)
@@ -105,6 +115,7 @@ public class FlowManager : MonoBehaviour
 
         yield return new WaitForSeconds(inBetweenTime);
         menu.SetActive(menuState);
+        thankYou.SetActive(thankyouState);
 
         float counter2 = 0;
         while (counter2 < 1)
@@ -133,26 +144,30 @@ public class FlowManager : MonoBehaviour
 
     public void PlayGameFromMenu()
     {
-        StartCoroutine(ScreenTransition(1.5f, 0.75f, false));
+        state = GameState.Idle;
         BoardManager.Instance.ResetBoard(0);
         StartCoroutine(BoardManager.Instance.OpenZone(BoardManager.Instance.currentZone, 0));
         CardManager.Instance.ResetDeck();
-        StartCoroutine(CardManager.Instance.DrawHeart());
+        StartCoroutine(ScreenTransition(1.5f, 0.75f, false, false));
+        StartCoroutine(CardManager.Instance.DrawHeart(1.5f));
+
 
     }
 
     public IEnumerator GameOver()
     {
+        menuButton.hasBeenClicked = false;
+        CardManager.Instance.ResetDeck();
+        BoardManager.Instance.HideCells();
         StopAllCoroutines();
         BoardManager.Instance.StopAllCoroutines();
         CardManager.Instance.StopAllCoroutines();
-
 
         if (tuto)
         {
             StartCoroutine(QuitTuto());
         }
-        StartCoroutine(ScreenTransition(1.5f, 2f, true));
+        StartCoroutine(ScreenTransition(1.5f, 1f, true, false));
         yield return new WaitForSeconds(0.3f);
         gameOverText.SetActive(true);
         yield return new WaitForSeconds(1.5f);
@@ -164,14 +179,14 @@ public class FlowManager : MonoBehaviour
 
     public IEnumerator Win()
     {
+        thankYouButton.hasBeenClicked = false;
+
         StopAllCoroutines();
         BoardManager.Instance.StopAllCoroutines();
         CardManager.Instance.StopAllCoroutines();
 
-        StartCoroutine(ScreenTransition(1.5f, 2f, true));
+        StartCoroutine(ScreenTransition(1.5f, 2f, false, true));
         yield return new WaitForSeconds(0.5f);
-        menu.SetActive(false);
-        thankYou.SetActive(true);
 
     }
 
@@ -180,6 +195,7 @@ public class FlowManager : MonoBehaviour
 
     public IEnumerator TutoStepOne()
     {
+        noInput = true;
         //Debug.Log("one");
         tutoStep = 1;
 
@@ -189,12 +205,14 @@ public class FlowManager : MonoBehaviour
         tutoTexts[3].SetActive(false);
 
         DOTween.Restart("tuto_01");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         tutoTexts[0].SetActive(true);
+        noInput = false;
     }
 
     public IEnumerator TutoStepTwo()
     {
+        noInput = true;
         //Debug.Log("two");
         tutoStep = 2;
 
@@ -204,12 +222,14 @@ public class FlowManager : MonoBehaviour
         tutoTexts[3].SetActive(false);
         DOTween.Restart("tuto_02");
         BoardManager.Instance.HighlightSpecificCell(4, 5);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         tutoTexts[1].SetActive(true);
+        noInput = false;
     }
 
     public IEnumerator TutoStepThree(bool draw)
     {
+        noInput = true;
         //Debug.Log("three");
         if (draw)
         {
@@ -224,28 +244,32 @@ public class FlowManager : MonoBehaviour
         tutoTexts[0].SetActive(false);
         tutoTexts[1].SetActive(false);
         tutoTexts[3].SetActive(false);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.8f);
         DOTween.Restart("tuto_03");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         tutoTexts[2].SetActive(true);
+        noInput = false;
     }
 
     public IEnumerator TutoStepThreeHalf()
     {
+        noInput = true;
         //Debug.Log("threeHalf");
-        tutoStep = 3;
+        tutoStep = 35;
         SetState(GameState.Casting);
         BoardManager.Instance.HighlightAdjacents();
         tutoTexts[0].SetActive(false);
-        tutoTexts[2].SetActive(false);
         tutoTexts[1].SetActive(false);
         tutoTexts[3].SetActive(false);
-        DOTween.Restart("tuto_out");
-        yield return new WaitForSeconds(0.01f);
+        tutoTexts[2].SetActive(false);
+        DOTween.Restart("tuto_035");
+        yield return new WaitForSeconds(0.1f);
+        noInput = false;
     }
 
     public IEnumerator TutoStepFour()
     {
+        noInput = true;
         //Debug.Log("four");
         tutoStep = 4;
         SetState(GameState.Idle);
@@ -255,7 +279,7 @@ public class FlowManager : MonoBehaviour
         DOTween.Restart("tuto_04");
         yield return new WaitForSeconds(0.5f);
         tutoTexts[3].SetActive(true);
-
+        noInput = false;
     }
 
     public IEnumerator QuitTuto()

@@ -197,6 +197,24 @@ TextureImporter:
   - first:
       213: -7269184355723280746
     second: button_medium
+  - first:
+      213: -1152708579528775845
+    second: FX_bolt_01
+  - first:
+      213: -4927225178530024681
+    second: FX_bolt_02
+  - first:
+      213: -1029027485923118750
+    second: FX_bolt_03
+  - first:
+      213: 5975603110045157114
+    second: FX_bolt_04
+  - first:
+      213: -5407053989498053065
+    second: FX_bolt_05
+  - first:
+      213: 6281781110548651862
+    second: FX_bolt_06
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -1657,7 +1675,7 @@ TextureImporter:
         width: 9
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 4, y: 6, z: 4, w: 5}
       outline: []
       physicsShape: []
@@ -1665,6 +1683,132 @@ TextureImporter:
       bones: []
       spriteID: 673f2a2af54e8ca4f997a120e7205553
       internalID: -7269184355723280746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_bolt_01
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 246
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 146beaedb7ef74a79b501b96cea989bc
+      internalID: -1152708579528775845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_bolt_02
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 246
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c66719214d9dc4638b12345ce494960c
+      internalID: -4927225178530024681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_bolt_03
+      rect:
+        serializedVersion: 2
+        x: 188
+        y: 246
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 240f5fc5b39bf4bc5bedb55af1d9fc15
+      internalID: -1029027485923118750
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_bolt_04
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 246
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7268331c9c27e435986efcd00259c994
+      internalID: 5975603110045157114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_bolt_05
+      rect:
+        serializedVersion: 2
+        x: 248
+        y: 246
+        width: 29
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1de18f78d9e84a67a96f3e9f48dc511
+      internalID: -5407053989498053065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FX_bolt_06
+      rect:
+        serializedVersion: 2
+        x: 278
+        y: 246
+        width: 30
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74e21d40d39414932b9b669744e20d02
+      internalID: 6281781110548651862
       vertices: []
       indices: 
       edges: []
