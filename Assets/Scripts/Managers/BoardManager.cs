@@ -427,6 +427,7 @@ public class BoardManager : MonoBehaviour
 
         }
         yield return new WaitForEndOfFrame();
+        SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_bomb);
         ComputeConnections();
 
     }
@@ -578,7 +579,10 @@ public class BoardManager : MonoBehaviour
         }
 
         yield return new WaitForEndOfFrame();
-
+        if (boltChainItems.Count>1)
+        {
+            SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_bolt);
+        }
         boltChainItems[0].DestroyItem();
     }
 
@@ -683,6 +687,7 @@ public class BoardManager : MonoBehaviour
                 {              
                     if (contactItems[i] != null && arrows[i] !=null)
                     {
+                        SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_arrow);
                         contactItems[i].HitItem();
                         InstantiateFX(contactItems[i].x, contactItems[i].y, CardManager.Instance.explosionFX, 1.5f);
                     }

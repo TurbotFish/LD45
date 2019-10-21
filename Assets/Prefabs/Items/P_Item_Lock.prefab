@@ -90,7 +90,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1000891377674600715}
   - component: {fileID: 1000891377674600714}
-  - component: {fileID: 1000891377674600717}
   - component: {fileID: 1000891377674600712}
   m_Layer: 0
   m_Name: P_Item_Lock
@@ -136,32 +135,6 @@ MonoBehaviour:
   sprite: {fileID: 1000891377501618379}
   connectedColor: {r: 1, g: 1, b: 1, a: 1}
   disconnectedColor: {r: 0.58259165, g: 0.5785867, b: 0.6226415, a: 1}
---- !u!61 &1000891377674600717
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000891377674600716}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.25}
-  m_EdgeRadius: 0
 --- !u!114 &1000891377674600712
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -131,6 +131,11 @@ public class CardManager : MonoBehaviour
     {
         if (handSize<5)
         {
+            if (cardsInDeck.Count == 0)
+            {
+                StartCoroutine(ShuffleDeck());
+            }
+
             handSize++;
 
             Transform drawnCard = cardsInDeck[0].transform;
@@ -165,10 +170,7 @@ public class CardManager : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
 
-            if (cardsInDeck.Count == 0)
-            {
-                StartCoroutine(ShuffleDeck());
-            }
+
 
             UpdateCardNumber();
         }
@@ -528,9 +530,11 @@ public class CardManager : MonoBehaviour
 
     public void DestroyOrb()
     {
+        orbCount--;
         if (cardsInHand[cardsInHand.Count - 1] != null)
         {
-            StartCoroutine(Discard(cardsInHand[cardsInHand.Count - 1].transform, false));
+            if (orbCount<maxOrbs)
+                StartCoroutine(Discard(cardsInHand[cardsInHand.Count - 1].transform, false));
         }
 
     }

@@ -7,20 +7,18 @@ public class LaunchGameButton : MonoBehaviour
     public bool hasBeenClicked;
     public Animator buttonAnim;
 
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
 
 
     private void OnMouseDown()
     {
         if (!hasBeenClicked)
         {
+            SoundManager.Instance.PlaySound(1, SoundManager.Instance.click);
             hasBeenClicked = true;
             buttonAnim.SetBool("clicked", hasBeenClicked);
             FlowManager.Instance.PlayGameFromMenu();
+
         }
     }
 

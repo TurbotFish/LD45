@@ -39,6 +39,10 @@ public class Heart : MonoBehaviour
         if (item.type == CardManager.CardType.CorruptedHeart)
         {
             CardManager.Instance.corruptedHeartCount--;
+            if (CardManager.Instance.corruptedHeartCount < CardManager.Instance.maxCorruptedHearts)
+            {
+                StartCoroutine(CardManager.Instance.DrawCard());
+            }
         }
 
         BoardManager.Instance.hearts.Remove(this);

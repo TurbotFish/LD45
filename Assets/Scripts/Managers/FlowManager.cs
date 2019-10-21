@@ -149,6 +149,7 @@ public class FlowManager : MonoBehaviour
         StartCoroutine(BoardManager.Instance.OpenZone(BoardManager.Instance.currentZone, 0));
         CardManager.Instance.ResetDeck();
         StartCoroutine(ScreenTransition(1.5f, 0.75f, false, false));
+        SoundManager.Instance.StartMainMusic();
         StartCoroutine(CardManager.Instance.DrawHeart(1.5f));
 
 
@@ -168,6 +169,7 @@ public class FlowManager : MonoBehaviour
             StartCoroutine(QuitTuto());
         }
         StartCoroutine(ScreenTransition(1.5f, 1f, true, false));
+        SoundManager.Instance.StartMenuMusic();
         yield return new WaitForSeconds(0.3f);
         gameOverText.SetActive(true);
         yield return new WaitForSeconds(1.5f);

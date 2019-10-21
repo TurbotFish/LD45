@@ -21,14 +21,22 @@ public class Card : MonoBehaviour
     {
         if (CardManager.Instance.canSelectCard && !discarded)
         {
-            HoverCard();
+            if (!anim.GetBool("hover"))
+            {
+                HoverCard();
+
+            }
         }
     }
     public void OnMouseExit()
     {
         if (CardManager.Instance.canSelectCard && !discarded)
         {
-            UnhoverCard();
+            if (!anim.GetBool("selected"))
+            {
+                UnhoverCard();
+
+            }
         }
     }
 
@@ -37,7 +45,11 @@ public class Card : MonoBehaviour
     {
         if (!anim.GetBool("selected"))
         {
-            anim.SetBool("hover", true);
+            if (!anim.GetBool("hover"))
+            {
+                anim.SetBool("hover", true);
+                SoundManager.Instance.PlaySound(1, SoundManager.Instance.hover, 0.8f);
+            }
         }
     }
 
@@ -52,73 +64,79 @@ public class Card : MonoBehaviour
     public void SelectCard()
     {
         anim.SetBool("hover", false);
-        anim.SetBool("selected", true);
-        CardManager.Instance.selectedCard = this;
-
-        if (FlowManager.Instance.tuto)
+        if (!anim.GetBool("selected"))
         {
-            if (FlowManager.Instance.tutoStep == 1 && cardType == CardManager.CardType.Heart)
-            {
-                StartCoroutine(FlowManager.Instance.TutoStepTwo());
-            }
-            else if (FlowManager.Instance.tutoStep == 3 && cardType == CardManager.CardType.Sword)
-            {
-                StartCoroutine(FlowManager.Instance.TutoStepThreeHalf());
-            }
-        }
-        else if (FlowManager.Instance.state == FlowManager.GameState.Idle)
-        {
-            FlowManager.Instance.SetState(FlowManager.GameState.Casting);
+            SoundManager.Instance.PlaySound(1, SoundManager.Instance.select);
+            anim.SetBool("selected", true);
+            CardManager.Instance.selectedCard = this;
 
-            if (cardType == CardManager.CardType.Heart)
+            if (FlowManager.Instance.tuto)
             {
-                BoardManager.Instance.HighlightFreeCells();
+                if (FlowManager.Instance.tutoStep == 1 && cardType == CardManager.CardType.Heart)
+                {
+                    StartCoroutine(FlowManager.Instance.TutoStepTwo());
+                }
+                else if (FlowManager.Instance.tutoStep == 3 && cardType == CardManager.CardType.Sword)
+                {
+                    StartCoroutine(FlowManager.Instance.TutoStepThreeHalf());
+                }
             }
+            else if (FlowManager.Instance.state == FlowManager.GameState.Idle)
+            {
+                FlowManager.Instance.SetState(FlowManager.GameState.Casting);
 
-            else if (cardType == CardManager.CardType.CorruptedHeart
-                || cardType == CardManager.CardType.Shield
-                || cardType == CardManager.CardType.Sword
-                || cardType == CardManager.CardType.Orb
-                || cardType == CardManager.CardType.TinyHeart
-                || cardType == CardManager.CardType.Arrow
-                || cardType == CardManager.CardType.Heal)
-            {
-                BoardManager.Instance.HighlightAdjacents();
-            }
+                if (cardType == CardManager.CardType.Heart)
+                {
+                    BoardManager.Instance.HighlightFreeCells();
+                }
 
-            else if (cardType == CardManager.CardType.Consume
-                || cardType == CardManager.CardType.Bubble)
-            {
-                BoardManager.Instance.HighlightPlayerItems();
+                else if (cardType == CardManager.CardType.CorruptedHeart
+                    || cardType == CardManager.CardType.Shield
+                    || cardType == CardManager.CardType.Sword
+                    || cardType == CardManager.CardType.Orb
+                    || cardType == CardManager.CardType.TinyHeart
+                    || cardType == CardManager.CardType.Arrow
+                    || cardType == CardManager.CardType.Heal)
+                {
+                    BoardManager.Instance.HighlightAdjacents();
+                }
+
+                else if (cardType == CardManager.CardType.Consume
+                    || cardType == CardManager.CardType.Bubble)
+                {
+                    BoardManager.Instance.HighlightPlayerItems();
+                }
             }
-        }
-        else if (FlowManager.Instance.state == FlowManager.GameState.ChoosingCard)
-        {
-            StartCoroutine(CardManager.Instance.ChooseCard(this.gameObject));
-        }
-            
+            else if (FlowManager.Instance.state == FlowManager.GameState.ChoosingCard)
+            {
+                StartCoroutine(CardManager.Instance.ChooseCard(this.gameObject));
+            }
+        }           
         
-
     }
 
 
     public void UnselectCard()
     {
-        if (FlowManager.Instance.tuto)
+        if (anim.GetBool("selected"))
         {
-            if (FlowManager.Instance.tutoStep == 2)
+            if (FlowManager.Instance.tuto)
             {
-                StartCoroutine(FlowManager.Instance.TutoStepOne());
+                if (FlowManager.Instance.tutoStep == 2)
+                {
+                    StartCoroutine(FlowManager.Instance.TutoStepOne());
+                }
+                else if (FlowManager.Instance.tutoStep == 35)
+                {
+                    StartCoroutine(FlowManager.Instance.TutoStepThree(false));
+                }
             }
-            else if (FlowManager.Instance.tutoStep == 35)
-            {
-                StartCoroutine(FlowManager.Instance.TutoStepThree(false));
-            }
+            anim.SetBool("hover", false);
+            anim.SetBool("selected", false);
+            BoardManager.Instance.HideCells();
+            FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         }
-        anim.SetBool("hover", false);
-        anim.SetBool("selected", false);
-        BoardManager.Instance.HideCells();
-        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+
 
     }
 
@@ -187,6 +205,7 @@ public class Card : MonoBehaviour
         }
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.DiscardHeart(CardManager.Instance.selectedCard.transform));
@@ -215,9 +234,11 @@ public class Card : MonoBehaviour
         }
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         StartCoroutine(BoardManager.Instance.SwordAttack(x,y));
+        SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_sword);
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
 
@@ -236,6 +257,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
@@ -250,6 +272,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
@@ -264,6 +287,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
@@ -285,10 +309,12 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         StartCoroutine(BoardManager.Instance.Heal(x, y));
+        SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_heal);
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         StartCoroutine(CardManager.Instance.DrawCard());
@@ -299,6 +325,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
+        SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
         StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
@@ -318,6 +345,7 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.InstantiateFX(x, y, CardManager.Instance.consumeFX, 1);
+        SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_consume);
         BoardManager.Instance.items[x, y].Consume();
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);

@@ -44,6 +44,11 @@ public class Item : MonoBehaviour
             DestroyItem();
         }
 
+        if (type == CardManager.CardType.Shield)
+        {
+            SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_shield,0.1f);
+        }
+
 
 
         BoardManager.Instance.ComputeConnections();
