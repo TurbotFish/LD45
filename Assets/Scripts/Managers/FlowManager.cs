@@ -125,6 +125,7 @@ public class FlowManager : MonoBehaviour
             screenTransition.maskValue = Mathf.Lerp(1, 0, t);
             yield return new WaitForEndOfFrame();
         }
+        screenTransition.maskValue = 0;
 
         if (tuto)
         {

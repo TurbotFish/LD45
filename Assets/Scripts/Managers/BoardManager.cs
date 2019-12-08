@@ -610,7 +610,7 @@ public class BoardManager : MonoBehaviour
             }
             else if (up == max-1)
             {
-                arrowGoals.Add(new Vector3(cells[x, max].transform.position.x - (step * 0.01f), cells[x, max].transform.position.y));
+                arrowGoals.Add(new Vector3(cells[x, max-1].transform.position.x - (step * 0.01f), cells[x, max-1].transform.position.y));
                 contactItems.Add(null);
             }
         }
@@ -667,7 +667,7 @@ public class BoardManager : MonoBehaviour
             }
             else if (right == max - 1)
             {
-                arrowGoals.Add(new Vector3(cells[max,y].transform.position.x - (step * 0.01f), cells[max, y].transform.position.y));
+                arrowGoals.Add(new Vector3(cells[max-1,y].transform.position.x - (step * 0.01f), cells[max-1, y].transform.position.y));
                 contactItems.Add(null);
             }
         }
