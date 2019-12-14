@@ -157,6 +157,7 @@ public class Card : MonoBehaviour
 
     public void ResolveCard(int x, int y)
     {
+        FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         BoardManager.Instance.HideCells();
         if (CardManager.Instance.selectedCard != null)
         {
@@ -213,11 +214,17 @@ public class Card : MonoBehaviour
         if (!FlowManager.Instance.tuto)
         {
             yield return new WaitForSeconds(1f);
-            StartCoroutine(CardManager.Instance.DrawCard());
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
+
             yield return new WaitForSeconds(0.5f);
-            StartCoroutine(CardManager.Instance.DrawCard());
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
+
             yield return new WaitForSeconds(0.5f);
-            StartCoroutine(CardManager.Instance.DrawCard());
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
+
         }
         else
         {
@@ -236,7 +243,8 @@ public class Card : MonoBehaviour
         BoardManager.Instance.InstantiateItem(x, y, CardManager.Instance.selectedCard.itemGO);
         SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
         StartCoroutine(BoardManager.Instance.SwordAttack(x,y));
         SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_sword);
         yield return new WaitForSeconds(0.5f);
@@ -248,7 +256,9 @@ public class Card : MonoBehaviour
         }
         else
         {
-            StartCoroutine(CardManager.Instance.DrawCard());
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
+
         }
 
     }
@@ -260,10 +270,13 @@ public class Card : MonoBehaviour
         SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        //StartCoroutine(CardManager.Instance.DrawCard());
+        CardManager.Instance.Draw();
+
 
     }
 
@@ -276,10 +289,13 @@ public class Card : MonoBehaviour
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        //StartCoroutine(CardManager.Instance.DrawCard());
+        CardManager.Instance.Draw();
+
 
     }
 
@@ -291,14 +307,16 @@ public class Card : MonoBehaviour
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
 
         CardManager.Instance.corruptedHeartCount++;
         if (CardManager.Instance.handSize < 1)
         {
             yield return new WaitForSeconds(0.25f);
-            StartCoroutine(CardManager.Instance.DrawCard());
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
         }
     }
 
@@ -312,12 +330,15 @@ public class Card : MonoBehaviour
         SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
+
         StartCoroutine(BoardManager.Instance.Heal(x, y));
         SoundManager.Instance.PlaySound(2, SoundManager.Instance.sfx_heal);
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        //StartCoroutine(CardManager.Instance.DrawCard());
+        CardManager.Instance.Draw();
 
     }
 
@@ -328,16 +349,21 @@ public class Card : MonoBehaviour
         SoundManager.Instance.PlaySound(1, SoundManager.Instance.spawn);
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
+
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        //StartCoroutine(CardManager.Instance.DrawCard());
+        CardManager.Instance.Draw();
 
         CardManager.Instance.orbCount++;
         if (CardManager.Instance.orbCount <= CardManager.Instance.maxOrbs)
         {
-            yield return new WaitForSeconds(0.25f);
-            StartCoroutine(CardManager.Instance.DrawCard());
+            yield return new WaitForSeconds(0.75f);
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
+
         }
     }
 
@@ -349,10 +375,16 @@ public class Card : MonoBehaviour
         BoardManager.Instance.items[x, y].Consume();
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
-        StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        //if (CardManager.Instance.selectedCard!=null)
+        //{
+            //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+            CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
+
+        //}
         yield return new WaitForSeconds(0.5f);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        //StartCoroutine(CardManager.Instance.DrawCard());
+        CardManager.Instance.Draw();
 
     }
 
@@ -361,15 +393,19 @@ public class Card : MonoBehaviour
     {
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
         StartCoroutine(BoardManager.Instance.ArrowAttack(x,y));
-        yield return new WaitForSeconds(1f);
-        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
-        if (CardManager.Instance.selectedCard != null)
-        {
-            StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+        yield return new WaitForSeconds(0.25f);
+        //if (CardManager.Instance.selectedCard != null)
+        //{
+            //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
+            CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
 
-        }
+
+        //}
         yield return new WaitForSeconds(0.5f);
-        StartCoroutine(CardManager.Instance.DrawCard());
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+
+        //StartCoroutine(CardManager.Instance.DrawCard());
+        CardManager.Instance.Draw();
 
     }
 }

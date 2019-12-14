@@ -20,20 +20,20 @@ public class SiteLock : MonoBehaviour
  };
     [DllImport("__Internal")]
     private static extern void RedirectTo(string url);
+
     // Check right away if the domain is valid
     private void Start()
     {
-
-#if UNITY_WEBGL
         CheckDomains();
 
-#endif
     }
     private void CheckDomains()
     {
         if (!IsValidHost(domains))
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
             RedirectTo("www.coolmathgames.com");
+#endif
         }
     }
     private bool IsValidHost(string[] hosts)

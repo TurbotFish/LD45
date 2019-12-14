@@ -167,7 +167,7 @@ public class FlowManager : MonoBehaviour
 
         if (tuto)
         {
-            StartCoroutine(QuitTuto());
+            QuitTuto();
         }
         StartCoroutine(ScreenTransition(1.5f, 1f, true, false));
         SoundManager.Instance.StartMenuMusic();
@@ -242,7 +242,8 @@ public class FlowManager : MonoBehaviour
         SetState(GameState.Idle);
         if (draw)
         {
-            StartCoroutine(CardManager.Instance.DrawCard());
+            //StartCoroutine(CardManager.Instance.DrawCard());
+            CardManager.Instance.Draw();
         }
         tutoTexts[0].SetActive(false);
         tutoTexts[1].SetActive(false);
@@ -285,9 +286,9 @@ public class FlowManager : MonoBehaviour
         noInput = false;
     }
 
-    public IEnumerator QuitTuto()
+    public void QuitTuto()
     {
-        //Debug.Log("Quit");
+       // Debug.Log("Quit");
         tutoStep = 5;
         tuto = false;
         tutoTexts[0].SetActive(false);
@@ -295,9 +296,9 @@ public class FlowManager : MonoBehaviour
         tutoTexts[2].SetActive(false);
         tutoTexts[3].SetActive(false);
         DOTween.Restart("tuto_out");
-        yield return new WaitForSeconds(1);
+        //yield return new WaitForSeconds(1);
 
-        StartCoroutine(CardManager.Instance.PickCard(0, 2));
+        StartCoroutine(CardManager.Instance.PickCard(0, 2, 1));
 
     }
 }

@@ -41,7 +41,8 @@ public class Heart : MonoBehaviour
             CardManager.Instance.corruptedHeartCount--;
             if (CardManager.Instance.corruptedHeartCount < CardManager.Instance.maxCorruptedHearts)
             {
-                StartCoroutine(CardManager.Instance.DrawCard());
+                //StartCoroutine(CardManager.Instance.DrawCard());
+                CardManager.Instance.Draw();
             }
         }
 

@@ -196,14 +196,16 @@ public class BoardManager : MonoBehaviour
             }
             lockZoneAnims[currentZone].SetBool("dead", false); ;
 
-            yield return new WaitForSeconds(time);
+            //yield return new WaitForSeconds(time);
 
             if (i <= 4 && i != 0 && !FlowManager.Instance.tuto)
             {
-                StartCoroutine(CardManager.Instance.PickCard(0, 2));
+                StartCoroutine(CardManager.Instance.PickCard(0, 2, 1));
+                //Debug.Log("from here");
             }
             else if (i>4)
             {
+                yield return new WaitForSeconds(time);
                 StartCoroutine(FlowManager.Instance.Win());
 
             }

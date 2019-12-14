@@ -12,7 +12,7 @@ public class MouseManager : MonoBehaviour
 
             if (FlowManager.Instance.tuto && FlowManager.Instance.tutoStep == 4)
             {
-                StartCoroutine(FlowManager.Instance.QuitTuto());
+                FlowManager.Instance.QuitTuto();
             }
 
             RaycastHit2D hitInfo = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
@@ -48,6 +48,7 @@ public class MouseManager : MonoBehaviour
                     {
                         Cell cell = hitInfo.collider.GetComponent<Cell>();
                         CardManager.Instance.selectedCard.ResolveCard(cell.x, cell.y);
+                        StartCoroutine(ClickWait());
                     }
 
                 }
@@ -72,6 +73,14 @@ public class MouseManager : MonoBehaviour
                 CardManager.Instance.selectedCard.UnselectCard();
             }
         }
+
+    }
+
+    private IEnumerator ClickWait()
+    {
+        FlowManager.Instance.noInput = true;
+        yield return new WaitForSecondsRealtime(0.5f);
+        FlowManager.Instance.noInput = false;
 
     }
 }
