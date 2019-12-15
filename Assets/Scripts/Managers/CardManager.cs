@@ -277,7 +277,7 @@ public class CardManager : MonoBehaviour
             while (counter1 < 1)
             {
                 counter1 += Time.deltaTime * shuffleSpeed*cardsInDiscard.Count;
-                for (int n = 0; n < cardsInDiscard.Count; n++)
+                for (int n = 0; n < cardsInDiscard.Count || n<cardOldPositions.Count; n++)
                 {
                     cardsInDiscard[n].transform.position = Vector3.Lerp(cardOldPositions[n], discardHiddenPos.position, counter1);
                 }
@@ -331,7 +331,6 @@ public class CardManager : MonoBehaviour
         {
             counter1 += Time.deltaTime * drawSpeed;
             discardedCard.position = Vector3.Lerp(discardedOldPos, discardParent.position + discardPositions[posCycle], counter1);
-            Debug.Log(discardedCard.name + " / " + counter1);
             yield return new WaitForEndOfFrame();
         }
   
@@ -411,10 +410,19 @@ public class CardManager : MonoBehaviour
                 if (p <= w)
                 {
                     cardPicks.Add(cardDB.cardTiers[tier].cards[i].cardGO);
+                    if (cardPicks.Count>1 && cardPicks[0] == cardPicks[1])
+                    {
+                        cardPicks.RemoveAt(1);
+                        int j = (i == cardDB.cardTiers[tier].cards.Count - 1) ? 0 : i + 1;
+                        cardPicks.Add(cardDB.cardTiers[tier].cards[j].cardGO);
+                    }
                     break;
                 }
             }
+            //HACK to have different cards
+
         }
+
 
         yield return new WaitForSeconds(2.5f);
         //SAFETY:
@@ -590,10 +598,19 @@ public class CardManager : MonoBehaviour
         //handSize--;
         if (cardsInHand[cardsInHand.Count - 1] != null)
         {
-            if (orbCount<maxOrbs /*&& cardsInHand.Count > (3+1-Mathf.Clamp(corruptedHeartCount,0,maxCorruptedHearts))*/)
+            if (orbCount-corruptedHeartCount<maxOrbs /*&& cardsInHand.Count > (3+1-Mathf.Clamp(corruptedHeartCount,0,maxCorruptedHearts))*/)
             {
                 //StartCoroutine(Discard(cardsInHand[cardsInHand.Count - 1].transform, false));
-                DiscardBis(cardsInHand[cardsInHand.Count - 1].transform, false);
+                if (cardsInHand[cardsInHand.Count-1].GetComponent<Card>().discarded)
+                {
+                    DiscardBis(cardsInHand[cardsInHand.Count - 2].transform, false);
+                }
+                else
+                {
+                    cardsInHand[cardsInHand.Count - 1].GetComponent<Card>().discarded = true;
+                    DiscardBis(cardsInHand[cardsInHand.Count - 1].transform, false);
+
+                }
             }
         }
 

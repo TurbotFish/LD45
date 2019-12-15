@@ -4902,7 +4902,6 @@ MonoBehaviour:
   - {fileID: 2515248564735651502, guid: a23bd9690dbd2b04b8dfb8ea2b059463, type: 3}
   - {fileID: 2515248564735651502, guid: 4e0219d518cb67243b2c05129fb70b28, type: 3}
   - {fileID: 2515248564735651502, guid: a23bd9690dbd2b04b8dfb8ea2b059463, type: 3}
-  - {fileID: 2515248564735651502, guid: 71d48fe5816ef0146a12086416e28608, type: 3}
   selectedCard: {fileID: 0}
   canSelectCard: 1
   cardsInDeck: []

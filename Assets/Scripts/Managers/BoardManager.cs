@@ -173,6 +173,7 @@ public class BoardManager : MonoBehaviour
         }
         else
         {
+            FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
             lockZoneAnims[currentZone].SetBool("dead", false); ;
             lockZones[currentZone].sortingLayerName = "AboveFog";
 
@@ -209,8 +210,10 @@ public class BoardManager : MonoBehaviour
                 StartCoroutine(FlowManager.Instance.Win());
 
             }
+            FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+
         }
-        
+
     }
 
 
