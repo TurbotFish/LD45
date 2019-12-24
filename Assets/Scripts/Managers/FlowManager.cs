@@ -151,6 +151,7 @@ public class FlowManager : MonoBehaviour
         CardManager.Instance.ResetDeck();
         StartCoroutine(ScreenTransition(1.5f, 0.75f, false, false));
         SoundManager.Instance.StartMainMusic();
+        StartCoroutine(CardManager.Instance.ShowHand());
         StartCoroutine(CardManager.Instance.DrawHeart(1.5f));
 
 

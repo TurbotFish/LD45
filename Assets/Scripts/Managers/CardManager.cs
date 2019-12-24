@@ -379,7 +379,13 @@ public class CardManager : MonoBehaviour
     {
         //Debug.Log("pick card");
 
+        FlowManager.Instance.SetState(FlowManager.GameState.Idle);
+
         yield return new WaitForSecondsRealtime(time);
+
+        selectedCard.UnselectCard();
+        selectedCard = null;
+
 
         cardPick = true;
 
