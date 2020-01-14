@@ -19,7 +19,7 @@ public class Heart : MonoBehaviour
         health--;
         if (health <= 0)
         {
-            DestroyHeart();
+            StartCoroutine(DestroyHeart());
         }
         else
         {
@@ -33,20 +33,23 @@ public class Heart : MonoBehaviour
         heartAnim.SetInteger("hp", health);
     }
 
-    public void DestroyHeart()
+    public IEnumerator DestroyHeart()
     {
         Item item = GetComponent<Item>();
+
+        BoardManager.Instance.hearts.Remove(this);
+
         if (item.type == CardManager.CardType.CorruptedHeart)
         {
             CardManager.Instance.corruptedHeartCount--;
             if (CardManager.Instance.corruptedHeartCount < CardManager.Instance.maxCorruptedHearts)
             {
                 //StartCoroutine(CardManager.Instance.DrawCard());
+                yield return new WaitForSecondsRealtime(0.25f);
                 CardManager.Instance.Draw();
             }
         }
 
-        BoardManager.Instance.hearts.Remove(this);
         if (BoardManager.Instance.hearts.Count==0)
         {
 

@@ -750,7 +750,7 @@ GameObject:
   - component: {fileID: 4994955063328429397}
   m_Layer: 0
   m_Name: P_Card_TinyHeart
-  m_TagString: Untagged
+  m_TagString: card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

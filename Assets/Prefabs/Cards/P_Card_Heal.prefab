@@ -507,7 +507,7 @@ GameObject:
   - component: {fileID: 2515248564735651503}
   m_Layer: 0
   m_Name: P_Card_Heal
-  m_TagString: Untagged
+  m_TagString: card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

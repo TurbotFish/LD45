@@ -45,6 +45,7 @@ public class CardManager : MonoBehaviour
     public float shuffleSpace;
 
     public List<GameObject> cardsInHand = new List<GameObject>();
+    public List<GameObject> oldCards = new List<GameObject>();
     public Transform cardHandSpawn;
     public Transform heartHandStore;
     public GameObject heartCard;
@@ -211,7 +212,25 @@ public class CardManager : MonoBehaviour
 
     public IEnumerator DrawHeart(float delay)
     {
-        yield return new WaitForSeconds(delay);
+        //DOUBLE CHECK TO DELETE ANY EXTRA CARDS THAT MIGHT HAVE BEEN CARRIED OVER THIS GAME:
+
+        yield return new WaitForSeconds(delay*0.5f);
+
+        GameObject[] cardsCheckA = GameObject.FindGameObjectsWithTag("card");
+        foreach(GameObject go in cardsCheckA)
+        {
+            Destroy(go);
+        }
+        yield return new WaitForSeconds(delay*0.5f);
+
+        GameObject[] cardsCheckB = GameObject.FindGameObjectsWithTag("card");
+        foreach (GameObject go in cardsCheckB)
+        {
+            Destroy(go);
+        }
+        //END OF CHECK
+        ResetDeck(); // IT'S NOW HERE IN ORDER TO GO AFTER THE DOUBLE CHECK ABOVE
+
         handSize++;
         Transform drawnCard = heartCard.transform;
         drawnCard.position = cardHandSpawn.position;
@@ -602,7 +621,7 @@ public class CardManager : MonoBehaviour
     {
         orbCount--;
         //handSize--;
-        if (cardsInHand[cardsInHand.Count - 1] != null)
+        if (cardsInHand.Count > 0)
         {
             if (orbCount-corruptedHeartCount<maxOrbs /*&& cardsInHand.Count > (3+1-Mathf.Clamp(corruptedHeartCount,0,maxCorruptedHearts))*/)
             {

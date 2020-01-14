@@ -307,12 +307,13 @@ public class Card : MonoBehaviour
         BoardManager.Instance.hearts.Add(BoardManager.Instance.items[x, y].GetComponent<Heart>());
         BoardManager.Instance.ComputeConnections();
         yield return new WaitForSeconds(0.25f);
+       
         //StartCoroutine(CardManager.Instance.Discard(CardManager.Instance.selectedCard.transform, true));
         CardManager.Instance.DiscardBis(CardManager.Instance.selectedCard.transform, true);
         FlowManager.Instance.SetState(FlowManager.GameState.Idle);
 
         CardManager.Instance.corruptedHeartCount++;
-        if (CardManager.Instance.handSize < 1)
+        if (CardManager.Instance.cardsInHand.Count < 1 || CardManager.Instance.corruptedHeartCount<CardManager.Instance.orbCount)
         {
             yield return new WaitForSeconds(0.25f);
             //StartCoroutine(CardManager.Instance.DrawCard());
@@ -358,7 +359,7 @@ public class Card : MonoBehaviour
         CardManager.Instance.Draw();
 
         CardManager.Instance.orbCount++;
-        if (CardManager.Instance.orbCount <= CardManager.Instance.maxOrbs)
+        if (CardManager.Instance.orbCount <= CardManager.Instance.maxOrbs && CardManager.Instance.orbCount>=CardManager.Instance.corruptedHeartCount)
         {
             yield return new WaitForSeconds(0.75f);
             //StartCoroutine(CardManager.Instance.DrawCard());

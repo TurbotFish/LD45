@@ -148,9 +148,10 @@ public class FlowManager : MonoBehaviour
         state = GameState.Idle;
         BoardManager.Instance.ResetBoard(0);
         StartCoroutine(BoardManager.Instance.OpenZone(BoardManager.Instance.currentZone, 0));
-        CardManager.Instance.ResetDeck();
+        //CardManager.Instance.ResetDeck();
         StartCoroutine(ScreenTransition(1.5f, 0.75f, false, false));
         SoundManager.Instance.StartMainMusic();
+        
         StartCoroutine(CardManager.Instance.ShowHand());
         StartCoroutine(CardManager.Instance.DrawHeart(1.5f));
 
