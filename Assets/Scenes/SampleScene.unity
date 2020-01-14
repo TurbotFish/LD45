@@ -4954,6 +4954,7 @@ MonoBehaviour:
   healFX: {fileID: 546138973212445444, guid: f63c287dd9307904ea546c0b209e2669, type: 3}
   arrowPrefab: {fileID: 1735222977360116373, guid: 7934cd1e0b4d20342b3b1f41081ea71d,
     type: 3}
+  drawing: 0
 --- !u!114 &564897790
 MonoBehaviour:
   m_ObjectHideFlags: 0

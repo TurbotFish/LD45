@@ -87,7 +87,7 @@ public class CardManager : MonoBehaviour
     List<IEnumerator> draws = new List<IEnumerator>();
     List<IEnumerator> discards = new List<IEnumerator>();
 
-    bool drawing;
+    public bool drawing;
     bool discarding;
 
     private void Start()
@@ -99,6 +99,7 @@ public class CardManager : MonoBehaviour
     {
         if (discards.Count==0 && draws.Count > 0 && !drawing)
         {
+            Debug.Log("draws here?");
             StartCoroutine(draws[0]);
         }
         if (discards.Count > 0 && !discarding)
@@ -112,6 +113,8 @@ public class CardManager : MonoBehaviour
         handUp = true;
         handParent.position = handDefaultPos;
         handSize = 0;
+        orbCount = 0;
+        corruptedHeartCount = 0;
         foreach(GameObject g in cardsInDeck)
         {
             Destroy(g);
@@ -151,11 +154,13 @@ public class CardManager : MonoBehaviour
         if (cardsInHand.Count < 5)
         {
             draws.Add(DrawCard());
+            Debug.Log("ça bloque ici???");
         }
     }
 
     public IEnumerator DrawCard()
     {
+        Debug.Log("DrawCard");
         if (cardsInHand.Count<5)
         {
             drawing = true;

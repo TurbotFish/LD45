@@ -151,7 +151,7 @@ public class FlowManager : MonoBehaviour
         //CardManager.Instance.ResetDeck();
         StartCoroutine(ScreenTransition(1.5f, 0.75f, false, false));
         SoundManager.Instance.StartMainMusic();
-        
+        CardManager.Instance.drawing = false;
         StartCoroutine(CardManager.Instance.ShowHand());
         StartCoroutine(CardManager.Instance.DrawHeart(1.5f));
 
@@ -161,6 +161,7 @@ public class FlowManager : MonoBehaviour
     public IEnumerator GameOver()
     {
         menuButton.hasBeenClicked = false;
+
         CardManager.Instance.ResetDeck();
         BoardManager.Instance.HideCells();
         StopAllCoroutines();
@@ -185,7 +186,7 @@ public class FlowManager : MonoBehaviour
     public IEnumerator Win()
     {
         thankYouButton.hasBeenClicked = false;
-
+        yield return new WaitForSecondsRealtime(0.75f);
         StopAllCoroutines();
         BoardManager.Instance.StopAllCoroutines();
         CardManager.Instance.StopAllCoroutines();

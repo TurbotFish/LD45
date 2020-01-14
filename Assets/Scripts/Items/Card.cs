@@ -200,8 +200,10 @@ public class Card : MonoBehaviour
 
     public IEnumerator ResolveHeart(int x, int y)
     {
+        Debug.Log("mmmh est ce que c'est lancé au moins???");
         if (FlowManager.Instance.tuto)
         {
+            Debug.Log("tuto step 3 heart");
             FlowManager.Instance.tutoStep = 3;
         }
         FlowManager.Instance.SetState(FlowManager.GameState.Resolving);
@@ -224,10 +226,11 @@ public class Card : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             //StartCoroutine(CardManager.Instance.DrawCard());
             CardManager.Instance.Draw();
-
+            Debug.Log("draw draw draw");
         }
         else
         {
+            Debug.Log("oh oh");
             StartCoroutine(FlowManager.Instance.TutoStepThree(true));
         }
 
